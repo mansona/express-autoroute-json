@@ -1,0 +1,25 @@
+{
+  "name": "express-autoroute-json",
+  "version": "0.0.0",
+  "description": "Automatic JSON api builder for express-autoroute",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Blooie/express-autoroute-json"
+  },
+  "keywords": [
+    "express",
+    "autoroute",
+    "json",
+    "routing"
+  ],
+  "author": "Chris Manson chris@bloo.ie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Blooie/express-autoroute-json/issues"
+  },
+  "homepage": "https://github.com/Blooie/express-autoroute-json"
+}
