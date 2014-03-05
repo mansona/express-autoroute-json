@@ -70,6 +70,10 @@ module.exports.autoroute = autorouteJson({
 
 And that's it! nothing more required. Everything else has been generalised away for you. The interesting thing about the above example is that there is nothing missing, there is no hidden boiler plate code like the first example. Even with the most of the actual code missing the first example is longer than the entire express-autoroute-json segment.
 
+### Options
+
+```resource: String``` gives a new name to the resource, usually will default to the mongoose collection
+
 # Licence
 Copyright (c) 2013, Andrew Manson <andrew@bloo.ie>, Blooie Limited <info@bloo.ie>
 
