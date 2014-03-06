@@ -2,6 +2,8 @@ var executionFunction = require('./lib/execution');
 var queryFunction = require('./lib/query');
 var sortFunction = require('./lib/sort');
 
+var identityMiddleware = require('./lib/identityMiddleware')
+
 module.exports = function (options) {
 
     //check requied fields
@@ -16,10 +18,11 @@ module.exports = function (options) {
     if (options.find) {
         outputJson.get = {};
         outputJson.get["/" + resource] = [
+            options.find.authentication || identityMiddleware,
             queryFunction(options),
             sortFunction(options),
             executionFunction(options)
-        ]
+        ];
         outputJson.get["/" + resource + "/:id"] = function (req, res) {
             res.send();
         };

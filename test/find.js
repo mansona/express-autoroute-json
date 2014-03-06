@@ -94,4 +94,25 @@ describe('Find', function () {
             }));
         }).end(done);
     })
+    
+    it('should allow authenticated users to get objects', function(done){
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "authentication")
+        });
+
+        request(app).get('/chats?userlevel=max').expect(200).expect(function (res) {
+            expect(_.size(res.body)).to.equal(10);
+        }).end(done);
+    })
+    
+        
+    it('should not allow authenticated users to get objects', function(done){
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "authentication")
+        });
+
+        request(app).get('/chats?userlevel=noob').expect(401).end(done);
+    })
 })
