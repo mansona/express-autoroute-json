@@ -11,7 +11,9 @@ module.exports = function (options) {
     if (options.find) {
         outputJson.get = {};
         outputJson.get["/" + resource] = function (req, res) {
-            res.send();
+            options.model.find().exec().then(function(results){
+                res.json(results);
+            });
         };
         outputJson.get["/" + resource + "/:id"] = function (req, res) {
             res.send();

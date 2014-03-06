@@ -5,26 +5,56 @@ var express = require('express');
 var mongoose = require('mongoose');
 var path = require('path');
 var request = require('supertest');
+var _ = require('underscore')._;
 
 //mock the mongoose
-require('mockgoose')(mongoose);
+var mockgoose = require('mockgoose');
+mockgoose(mongoose);
 
 
 var app;
+var server;
 
 describe('Find', function () {
-    beforeEach(function () {
+    beforeEach(function (done) {
         //reset app
         app = express();
-        app.listen(255255);
+        server = app.listen(255255);
+        //load mockgoose data
+        require('./fixtures/loadData')(done)
+    });
+
+    afterEach(function () {
+        server.close();
+        mockgoose.reset();
     })
 
-    it('should return all models when default', function (done) {
+    it('should return return status 200 when find is present', function (done) {
         autoroute(app, {
-			throwErrors: true,
-			routesDir: path.join(process.cwd(), "test", "fixtures", "find")
-		});
-		
-		request(app).get('/chats').expect(200).end(done);
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "find")
+        });
+
+        request(app).get('/chats').expect(200).end(done);
+    })
+
+    it('should return 404 when there is no find object', function (done) {
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "modelOnly")
+        });
+
+        request(app).get('/chats').expect(404).end(done);
+    })
+
+    it('should return return all models when find is present', function (done) {
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "find")
+        });
+
+        request(app).get('/chats').expect(200).expect(function (res) {
+            expect(_.size(res.body)).to.equal(10);
+        }).end(done);
     })
 })
