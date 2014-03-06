@@ -57,4 +57,15 @@ describe('Find', function () {
             expect(_.size(res.body)).to.equal(10);
         }).end(done);
     })
+    
+    it('should return only return models that fit the query', function (done) {
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findQuery")
+        });
+
+        request(app).get('/chats?min=3').expect(200).expect(function (res) {
+            expect(_.size(res.body)).to.equal(7);
+        }).end(done);
+    })
 })
