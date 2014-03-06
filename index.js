@@ -1,5 +1,6 @@
 var executionFunction = require('./lib/execution');
 var queryFunction = require('./lib/query');
+var sortFunction = require('./lib/sort');
 
 module.exports = function (options) {
 
@@ -16,13 +17,13 @@ module.exports = function (options) {
         outputJson.get = {};
         outputJson.get["/" + resource] = [
             queryFunction(options),
+            sortFunction(options),
             executionFunction(options)
         ]
         outputJson.get["/" + resource + "/:id"] = function (req, res) {
             res.send();
         };
     }
-
 
     if (options.debug) {
         console.log(outputJson);

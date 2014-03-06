@@ -68,4 +68,30 @@ describe('Find', function () {
             expect(_.size(res.body)).to.equal(7);
         }).end(done);
     })
+    
+    it('should return a sorted array of objects', function (done) {
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "sortDown")
+        });
+
+        request(app).get('/chats?sortup=true').expect(200).expect(function (res) {
+            expect(res.body).to.deep.equal(_.sortBy(res.body, function(item){
+                return item.count
+            }));
+        }).end(done);
+    })
+    
+    it('should return a reverse sorted array of objects', function (done) {
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "sortDown")
+        });
+
+        request(app).get('/chats?sortdown=true').expect(200).expect(function (res) {
+            expect(res.body).to.deep.equal(_.sortBy(res.body, function(item){
+                return 1 - item.count
+            }));
+        }).end(done);
+    })
 })
