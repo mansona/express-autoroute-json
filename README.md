@@ -1,6 +1,16 @@
 # Express Autoroute JSON
 This package will provide a helper function that builds an [Express Autoroute](https://github.com/Blooie/express-autoroute) routing table for a particular Mongoose model. This is again subscribes heavily to the [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) methodology and has been created with the goal of preventing bad habits during authentication and authorization middlewares for json endpoints.
 
+## WARNING ABOUT NOT FINISHED PACKAGE
+In an effort to make a good API for this package I wrote the Readme first, I see this as akin to TDD for API development. Currently not all the "tests" are passing because the code hasn't been completed. 
+
+**What works: ** find, authentication and authorisation
+Why they are working: because that is all we need for the time being internally. Sorry it is the case but we are a busiess after all.
+
+**What doesn't work: ** any writing endpoints like put, post or delete
+
+**What to do if you want support for these: ** create an issue and explain your case for wanting them, if there is enough interest we will probably get around to it. Otherwise pull requests are welcome!
+
 ## Installation
 ```js
 npm install express-autoroute
@@ -63,8 +73,8 @@ module.exports.autoroute = autorouteJson({
             sort.updatedAt = -1
         }
     },
-    update: {}, //all default
-    create: {} //all default
+    update: {}, //all default - not currently supported
+    create: {} //all default - not currently supported
 })
 ```
 
