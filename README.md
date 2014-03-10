@@ -57,20 +57,19 @@ If you are working with lots of different mongoose models you will find yourself
 ```js
 module.exports.autoroute = autorouteJson({
     model: Chats, //actual mongoose model object
-    authentication: function(req){
+    authentication: function(req, res, next){
         //fuction to reject if not logged in
     }, 
     authorisation: function(req){
         //some way to limit access to particular objects 
     },
     find: {
-        query: function (req, query) {
+        query: function (req) {
             //add extra query options specific to your business logic
-            query.length = { "$gt" : 5 };
+            return { length : { "$gt" : 5 }};
         },
-        sort: function (req, sort) {
-            //update the sorting function
-            sort.updatedAt = -1
+        sort: function (req) {
+            return {updatedAt : -1}
         }
     },
     update: {}, //all default - not currently supported
@@ -81,8 +80,60 @@ module.exports.autoroute = autorouteJson({
 And that's it! nothing more required. Everything else has been generalised away for you. The interesting thing about the above example is that there is nothing missing, there is no hidden boiler plate code like the first example. Even with the most of the actual code missing the first example is longer than the entire express-autoroute-json segment.
 
 ### Options
+Current working options: 
+```
+{
+    model: Mongoose#Model, 
+    resource: String, //optional
+    authentication: function(req, res, next){}, 
+    authorisation: function(req){},
+    find: {
+        query: function (req){},
+        sort: function (req){}
+    }
+}
+```
 
-```resource: String``` gives a new name to the resource, usually will default to the mongoose collection
+#### ```model: Mongoose#Model``` 
+Actual mongoose model to use. Usually the name of the endpoint will be derived from the collection name ```model.collection.name```
+
+#### ```resource: String``` 
+if defined autoroute-json will use this string as the endpoint name
+
+#### ```authentication: function(req, res, next)``` 
+normal express style middleware to be used for any authentication needs. **remember** to call ```next()```
+
+#### ```authorisation: function(req)``` 
+method called to add to the query. This can be used to make sure that the mongoose model will always be queried with a particular parameter. Any conflicting parameters with that of ```find.query``` will be automaically combinded with an ```$and``` operator. This function must return a query object if it wants to effect the query. 
+
+example: 
+```
+autorouteJson({
+    authorisation: function(req){
+        // minimimum count of 4
+        return { count: { "$gte": 4 } };
+    },
+    find: {
+        query: function (req){
+            return { count: { "$lte": 8 } };
+        },
+    }
+})
+
+// results in query between 4 and 8
+{
+    "$and" : [
+        { count: { "$gte": 4 } },
+        { count: { "$lte": 8 } }
+    ]
+}
+```
+
+#### ```find.query: function(req)``` 
+returns a query object to use as part of the mongoose find()
+
+#### ```find.sort: function(req)``` 
+returns a sort object to use during find()
 
 # Licence
 Copyright (c) 2013, Andrew Manson <andrew@bloo.ie>, Blooie Limited <info@bloo.ie>

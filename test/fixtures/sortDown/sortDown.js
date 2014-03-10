@@ -6,9 +6,13 @@ module.exports.autoroute = autorouteJson({
     find: {
         sort: function (req, sort) {
             if (req.query.sortdown) {
-                sort.count = -1;
+                return {
+                    count: -1
+                };
             } else if (req.query.sortup) {
-                sort.count = 1;
+                return {
+                    count: 1
+                };
             }
         }
     }
