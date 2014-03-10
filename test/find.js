@@ -120,29 +120,29 @@ describe('the find block', function () {
         request(app).get('/chats?userlevel=noob').expect(401).end(done);
     })
     
-    //Can't currenlty test the output of the query with mockgoose. depends on: https://github.com/mccormicka/Mockgoose/issues/28
-    // it('should should only allow me to see the number of users i am allowed to see', function(done){
-    //     autoroute(app, {
-    //         throwErrors: true,
-    //         routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
-    //     });
+    //TODO remove branch reference for mockgoose in package.json
+    it('should should only allow me to see the number of users i am allowed to see', function(done){
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
+        });
 
-    //     request(app).get('/chats?userlevel=6').expect(function (res) {
-    //         expect(_.size(res.body)).to.equal(6);
-    //     }).end(done);
-    // })
+        request(app).get('/chats?userlevel=6').expect(function (res) {
+            expect(_.size(res.body)).to.equal(5);
+        }).end(done);
+    })
 
-    //Can't currenlty test the output of the query with mockgoose. depends on: https://github.com/mccormicka/Mockgoose/issues/28
-    // it('should restrict a query to only allow me to see the number of users i am allowed to see', function(done){
-    //     autoroute(app, {
-    //         throwErrors: true,
-    //         routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
-    //     });
+    //TODO remove branch reference for mockgoose in package.json
+    it('should restrict a query to only allow me to see the number of users i am allowed to see', function(done){
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
+        });
 
-    //     request(app).get('/chats?userlevel=6&min=3').expect(function (res) {
-    //         expect(_.size(res.body)).to.equal(3);
-    //     }).end(done);
-    // })
+        request(app).get('/chats?userlevel=6&min=3').expect(function (res) {
+            expect(_.size(res.body)).to.equal(2);
+        }).end(done);
+    })
     
     //TODO maybe kill this test when $and is supported https://github.com/mccormicka/Mockgoose/issues/28
     it('should build an $and query when there are competing restrictions', function () {
