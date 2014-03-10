@@ -207,4 +207,16 @@ describe('the find block', function () {
             }).end(done);
         })
     })
+    
+    it('should run the results object through the process funciton if present', function(done){
+        autoroute(app, {
+            throwErrors: true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "process")
+        });
+
+        request(app).get('/chats').expect(200).expect(function (res) {
+            expect(_.size(res.body)).to.equal(1);
+            expect(_.size(res.body.chats)).to.equal(10);
+        }).end(done);
+    })
 })
