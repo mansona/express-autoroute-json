@@ -11,11 +11,15 @@ var _ = require('underscore')._;
 var mockgoose = require('mockgoose');
 mockgoose(mongoose);
 
+//internal bits
+var authorisationFunction = require('../lib/authorisation');
+var queryFunction = require('../lib/query');
+var Chat = require('./models/chat');
 
 var app;
 var server;
 
-describe('Find', function () {
+describe('the find block', function () {
     beforeEach(function (done) {
         //reset app
         app = express();
@@ -114,5 +118,93 @@ describe('Find', function () {
         });
 
         request(app).get('/chats?userlevel=noob').expect(401).end(done);
+    })
+    
+    //Can't currenlty test the output of the query with mockgoose. depends on: https://github.com/mccormicka/Mockgoose/issues/28
+    // it('should should only allow me to see the number of users i am allowed to see', function(done){
+    //     autoroute(app, {
+    //         throwErrors: true,
+    //         routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
+    //     });
+
+    //     request(app).get('/chats?userlevel=6').expect(function (res) {
+    //         expect(_.size(res.body)).to.equal(6);
+    //     }).end(done);
+    // })
+
+    //Can't currenlty test the output of the query with mockgoose. depends on: https://github.com/mccormicka/Mockgoose/issues/28
+    // it('should restrict a query to only allow me to see the number of users i am allowed to see', function(done){
+    //     autoroute(app, {
+    //         throwErrors: true,
+    //         routesDir: path.join(process.cwd(), "test", "fixtures", "authorisation")
+    //     });
+
+    //     request(app).get('/chats?userlevel=6&min=3').expect(function (res) {
+    //         expect(_.size(res.body)).to.equal(3);
+    //     }).end(done);
+    // })
+    
+    //TODO maybe kill this test when $and is supported https://github.com/mccormicka/Mockgoose/issues/28
+    it('should build an $and query when there are competing restrictions', function () {
+        var options = {
+            model: require('./models/chat'),
+            find: {
+                authorisation: function (req) {
+                    if (req.query.userlevel) {
+                        return {
+                            count: {
+                                "$lt": req.query.userlevel
+                            }
+                        };
+                    }
+                },
+                query: function (req) {
+                    if (req.query.min) {
+                        return {
+                            count: {
+                                "$gt": req.query.min
+                            }
+                        };
+                    }
+                }
+            }
+        }
+        var req = {
+            query: {
+                userlevel: 6,
+                min: 3
+            }
+        }
+    
+        authorisationFunction(options)(req, {}, function () {}),
+        queryFunction(options)(req, {}, function () {}),
+    
+        expect(req.autorouteQuery).to.deep.equal({
+            '$and': [{
+                count: {
+                    '$lt': 6
+                }
+            }, {
+                count: {
+                    '$gt': 3
+                }
+            }]
+        });
+    })
+    
+    it('should return return status 200 when find is present for ids', function (done) {
+        
+        var chat = new Chat({name: "unique person!!" , count: 42});
+        chat.save(function(err, chatObj){
+            
+            autoroute(app, {
+                throwErrors: true,
+                routesDir: path.join(process.cwd(), "test", "fixtures", "find")
+            });
+            
+            request(app).get('/chats/' + chatObj._id).expect(200).expect(function(res){
+                expect(_.omit(res.body, '__v')).to.deep.equal({name: "unique person!!" , count: 42, _id: chatObj.id})
+            }).end(done);
+        })
     })
 })
