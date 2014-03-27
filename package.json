@@ -1,7 +1,7 @@
 {
   "name": "express-autoroute-json",
   "version": "1.2.3",
-  "description": "Automatic JSON api builder for express-autoroute",
+  "description": "Express Auto Route Json is an automatic JSON 'REST' api builder for express-autoroute",
   "main": "index.js",
   "engines" : { "node" : ">=0.10" },
   "engineStrict": true,
