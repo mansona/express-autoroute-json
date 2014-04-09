@@ -65,13 +65,13 @@ If you are working with lots of different mongoose models you will find yourself
 ```js
 module.exports.autoroute = autorouteJson({
     model: Chats, //actual mongoose model object
-    authentication: function(req, res, next){
-        //fuction to reject if not logged in
-    }, 
-    authorisation: function(req){
-        //some way to limit access to particular objects 
-    },
     find: {
+        authentication: function(req, res, next){
+            //fuction to reject if not logged in
+        }, 
+        authorisation: function(req){
+            //some way to limit access to particular objects 
+        },
         query: function (req) {
             //add extra query options specific to your business logic
             return { length : { "$gt" : 5 }};
@@ -93,9 +93,9 @@ Current working options:
 {
     model: Mongoose#Model, 
     resource: String, //optional
-    authentication: function(req, res, next){}, 
-    authorisation: function(req){},
     find: {
+        authentication: function(req, res, next){}, 
+        authorisation: function(req){},
         query: function (req){},
         sort: function (req){}
     }
@@ -108,20 +108,20 @@ Actual mongoose model to use. Usually the name of the endpoint will be derived f
 #### ```resource: String``` 
 if defined autoroute-json will use this string as the endpoint name
 
-#### ```authentication: function(req, res, next)``` 
+#### ```find.authentication: function(req, res, next)``` 
 normal express style middleware to be used for any authentication needs. **remember** to call ```next()```
 
-#### ```authorisation: function(req)``` 
+#### ```find.authorisation: function(req)``` 
 method called to add to the query. This can be used to make sure that the mongoose model will always be queried with a particular parameter. Any conflicting parameters with that of ```find.query``` will be automaically combinded with an ```$and``` operator. This function must return a query object if it wants to effect the query. 
 
 example: 
 ```
 autorouteJson({
-    authorisation: function(req){
-        // minimimum count of 4
-        return { count: { "$gte": 4 } };
-    },
     find: {
+        authorisation: function(req){
+            // minimimum count of 4
+            return { count: { "$gte": 4 } };
+        },
         query: function (req){
             return { count: { "$lte": 8 } };
         },
