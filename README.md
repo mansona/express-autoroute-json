@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/Blooie/express-autoroute-json.png?branch=master)](https://travis-ci.org/Blooie/express-autoroute-json)
 [![devDependency Status](https://david-dm.org/Blooie/express-autoroute-json/dev-status.svg?theme=shields.io)](https://david-dm.org/Blooie/express-autoroute-json#info=devDependencies)
+[![Code Climate](https://codeclimate.com/github/Blooie/express-autoroute-json.png)](https://codeclimate.com/github/Blooie/express-autoroute-json)
 
 # Express Autoroute JSON
 This package will provide a helper function that builds an [Express Autoroute](https://github.com/Blooie/express-autoroute) routing table for a particular Mongoose model. This is again subscribes heavily to the [convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) methodology and has been created with the goal of preventing bad habits during authentication and authorization middlewares for json endpoints.
