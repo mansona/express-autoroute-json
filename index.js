@@ -3,12 +3,14 @@ var executionFunction = require('./lib/execution');
 var findOne = require('./lib/findOne');
 var queryFunction = require('./lib/query');
 var sortFunction = require('./lib/sort');
+var createFunction = require('./lib/create');
+var createExecution = require('./lib/createExecution');
 
-var identityMiddleware = require('./lib/identityMiddleware')
+var identityMiddleware = require('./lib/identityMiddleware');
 
 module.exports = function (options) {
 
-    //check requied fields
+    //check required fields
     if (!options.model) throw new Error("Mongoose model is missing");
 
     //set the defaults
@@ -30,10 +32,17 @@ module.exports = function (options) {
             findOne(options)
         ];
     }
+    if(options.create){
+        outputJson.post = {};
+        outputJson.post["/" + resource] = [
+            createFunction(options),
+            createExecution(options)
+        ];
+    }
 
     if (options.debug) {
         console.log(outputJson);
     }
 
     return outputJson;
-}
+};
