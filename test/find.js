@@ -23,15 +23,16 @@ describe('the find block', function () {
     beforeEach(function (done) {
         //reset app
         app = express();
-        server = app.listen(255255);
-        //load mockgoose data
-        require('./fixtures/loadData')(done)
+        server = app.listen(255255, function(){
+            //load mockgoose data
+            require('./fixtures/loadData')(done);
+        });
     });
 
     afterEach(function (done) {
         mockgoose.reset();
         server.close(done);
-    })
+    });
 
     it('should return return status 200 when find is present', function (done) {
         autoroute(app, {
@@ -40,7 +41,7 @@ describe('the find block', function () {
         });
 
         request(app).get('/chats').expect(200).end(done);
-    })
+    });
 
     it('should return 404 when there is no find object', function (done) {
         autoroute(app, {

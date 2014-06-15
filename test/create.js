@@ -20,9 +20,10 @@ describe('the create block', function () {
     beforeEach(function (done) {
         //reset app
         app = express();
-        server = app.listen(255255);
-        //load mockgoose data
-        require('./fixtures/loadData')(done);
+        server = app.listen(255255, function(){
+            //load mockgoose data
+            require('./fixtures/loadData')(done);
+        });
     });
 
     afterEach(function (done) {
