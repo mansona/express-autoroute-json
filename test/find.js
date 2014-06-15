@@ -28,9 +28,9 @@ describe('the find block', function () {
         require('./fixtures/loadData')(done)
     });
 
-    afterEach(function () {
-        server.close();
+    afterEach(function (done) {
         mockgoose.reset();
+        server.close(done);
     })
 
     it('should return return status 200 when find is present', function (done) {
@@ -61,7 +61,7 @@ describe('the find block', function () {
             expect(_.size(res.body)).to.equal(10);
         }).end(done);
     })
-    
+
     it('should return only return models that fit the query', function (done) {
         autoroute(app, {
             throwErrors: true,
@@ -72,7 +72,7 @@ describe('the find block', function () {
             expect(_.size(res.body)).to.equal(7);
         }).end(done);
     })
-    
+
     it('should return a sorted array of objects', function (done) {
         autoroute(app, {
             throwErrors: true,
@@ -85,7 +85,7 @@ describe('the find block', function () {
             }));
         }).end(done);
     })
-    
+
     it('should return a reverse sorted array of objects', function (done) {
         autoroute(app, {
             throwErrors: true,
@@ -98,7 +98,7 @@ describe('the find block', function () {
             }));
         }).end(done);
     })
-    
+
     it('should allow authenticated users to get objects', function(done){
         autoroute(app, {
             throwErrors: true,
@@ -109,8 +109,8 @@ describe('the find block', function () {
             expect(_.size(res.body)).to.equal(10);
         }).end(done);
     })
-    
-        
+
+
     it('should not allow authenticated users to get objects', function(done){
         autoroute(app, {
             throwErrors: true,
@@ -119,7 +119,7 @@ describe('the find block', function () {
 
         request(app).get('/chats?userlevel=noob').expect(401).end(done);
     })
-    
+
     //TODO remove branch reference for mockgoose in package.json
     it('should should only allow me to see the number of users i am allowed to see', function(done){
         autoroute(app, {
@@ -143,7 +143,7 @@ describe('the find block', function () {
             expect(_.size(res.body)).to.equal(2);
         }).end(done);
     })
-    
+
     //TODO maybe kill this test when $and is supported https://github.com/mccormicka/Mockgoose/issues/28
     it('should build an $and query when there are competing restrictions', function () {
         var options = {
@@ -175,10 +175,10 @@ describe('the find block', function () {
                 min: 3
             }
         }
-    
+
         authorisationFunction(options)(req, {}, function () {}),
         queryFunction(options)(req, {}, function () {}),
-    
+
         expect(req.autorouteQuery).to.deep.equal({
             '$and': [{
                 count: {
@@ -191,23 +191,23 @@ describe('the find block', function () {
             }]
         });
     })
-    
+
     it('should return return status 200 when find is present for ids', function (done) {
-        
+
         var chat = new Chat({name: "unique person!!" , count: 42});
         chat.save(function(err, chatObj){
-            
+
             autoroute(app, {
                 throwErrors: true,
                 routesDir: path.join(process.cwd(), "test", "fixtures", "find")
             });
-            
+
             request(app).get('/chats/' + chatObj._id).expect(200).expect(function(res){
                 expect(_.omit(res.body, '__v')).to.deep.equal({name: "unique person!!" , count: 42, _id: chatObj.id})
             }).end(done);
         })
     })
-    
+
     it('should run the results object through the process funciton if present', function(done){
         autoroute(app, {
             throwErrors: true,

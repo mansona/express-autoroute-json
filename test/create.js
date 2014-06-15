@@ -22,12 +22,12 @@ describe('the create block', function () {
         app = express();
         server = app.listen(255255);
         //load mockgoose data
-        require('./fixtures/loadData')(done)
+        require('./fixtures/loadData')(done);
     });
 
-    afterEach(function () {
-        server.close();
+    afterEach(function (done) {
         mockgoose.reset();
+        server.close(done);
     });
 
     it('should return status 201 if create exists', function (done) {
