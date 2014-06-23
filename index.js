@@ -4,8 +4,8 @@ var findOne = require('./lib/findOne');
 var queryFunction = require('./lib/query');
 var sortFunction = require('./lib/sort');
 var createFunction = require('./lib/create');
+var paginationFunction = require('./lib/pagination');
 var createExecution = require('./lib/createExecution');
-
 var identityMiddleware = require('./lib/identityMiddleware');
 
 module.exports = function (options) {
@@ -25,6 +25,7 @@ module.exports = function (options) {
             options.find.authentication || identityMiddleware,
             authorisationFunction(options),
             queryFunction(options),
+            paginationFunction(options),
             sortFunction(options),
             executionFunction(options)
         ];
