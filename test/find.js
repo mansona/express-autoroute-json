@@ -220,4 +220,28 @@ describe('the find block', function () {
             expect(_.size(res.body.chats)).to.equal(10);
         }).end(done);
     })
+
+    it('should only return the first chat instance instead of returning the full array', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?limit=1').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(1);
+            expect(_.size(res.body.chats)).to.equal(1);
+        }).end(done);
+    })
+
+    it('should return only a single item from the middle of the array', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?limit=1&offset=5').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(1);
+            expect(_.size(res.body.chats)).to.equal(1);
+        }).end(done);
+    })
 })
