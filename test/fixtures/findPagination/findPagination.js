@@ -10,9 +10,10 @@ module.exports.autoroute = autorouteJson({
     	limit: function(req){
     		return req.query.limit || 100;
     	},
-        process: function (results) {
+        process: function (results, meta) {
             return {
-                chats: results
+                chats: results,
+                meta: meta
             }
         }
     }
