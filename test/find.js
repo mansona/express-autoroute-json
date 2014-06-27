@@ -194,7 +194,6 @@ describe('the find block', function () {
     })
 
     it('should return return status 200 when find is present for ids', function (done) {
-
         var chat = new Chat({name: "unique person!!" , count: 42});
         chat.save(function(err, chatObj){
 
@@ -221,27 +220,68 @@ describe('the find block', function () {
         }).end(done);
     })
 
-    it('should only return the first chat instance instead of returning the full array', function(done){
+    it('should return a chats array and a meta array', function(done){
         autoroute(app, {
             throwErrors:true,
             routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
         });
 
-        request(app).get('/chats?limit=1').expect(200).expect(function(res){
-            expect(_.size(res.body)).to.equal(1);
+        request(app).get('/chats?offset=0&limit=10').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);//We should have 'chats' and 'meta' keys
+        }).end(done);
+    })
+
+    it('should have a chats array with a single item based on offset and limit', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?offset=0&limit=1').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);
             expect(_.size(res.body.chats)).to.equal(1);
         }).end(done);
     })
 
-    it('should return only a single item from the middle of the array', function(done){
+    it('should return a meta object with null previous object and a next pointing to the next item', function(done){
         autoroute(app, {
             throwErrors:true,
             routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
         });
 
-        request(app).get('/chats?limit=1&offset=5').expect(200).expect(function(res){
-            expect(_.size(res.body)).to.equal(1);
+        request(app).get('/chats?offset=0&limit=1').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);
             expect(_.size(res.body.chats)).to.equal(1);
+            expect(res.body.meta.previous).to.equal(null);
+            expect(res.body.meta.next.offset).to.equal(1);
+            expect(res.body.meta.next.limit).to.equal(1);
+        }).end(done);
+    })
+
+    it('should return a chats array with five items based on offset and limit', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?offset=5&limit=5').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);
+            expect(_.size(res.body.chats)).to.equal(5);
+        }).end(done);
+    })
+
+    it('should return a meta object with a previous pointing to the previous item and a null next object', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?offset=5&limit=5').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);
+            expect(_.size(res.body.chats)).to.equal(5);
+            expect(res.body.meta.previous.offset).to.equal(0);
+            expect(res.body.meta.previous.limit).to.equal(5);
+            expect(res.body.meta.next).to.equal(null);
         }).end(done);
     })
 })
