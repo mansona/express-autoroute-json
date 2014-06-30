@@ -284,4 +284,17 @@ describe('the find block', function () {
             expect(res.body.meta.next).to.equal(null);
         }).end(done);
     })
+
+    it('should return a meta object next and previous objects which should be null', function(done){
+        autoroute(app, {
+            throwErrors:true,
+            routesDir: path.join(process.cwd(), "test", "fixtures", "findPagination")
+        });
+
+        request(app).get('/chats?offset=0&limit=20').expect(200).expect(function(res){
+            expect(_.size(res.body)).to.equal(2);
+            expect(res.body.meta.previous).to.equal(null);
+            expect(res.body.meta.next).to.equal(null);
+        }).end(done);
+    })
 })
