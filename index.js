@@ -30,6 +30,8 @@ module.exports = function (options) {
             executionFunction(options)
         ];
         outputJson.get["/" + resource + "/:id"] = [
+            options.find.authentication || identityMiddleware,
+            authorisationFunction(options),
             findOne(options)
         ];
     }
