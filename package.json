@@ -9,7 +9,7 @@
   "engineStrict": true,
   "scripts": {
     "test": "node_modules/mocha/bin/mocha",
-    "test-watch": "nodemon node_modules/mocha/bin/mocha"
+    "test-watch": "node_modules/mocha/bin/mocha -w"
   },
   "repository": {
     "type": "git",
@@ -30,12 +30,13 @@
   "devDependencies": {
     "chai": "~1.9.0",
     "express": "^4.9.8",
-    "express-autoroute": "~1.1.0",
+    "express-autoroute": "~1.1.1",
     "mocha": "^2.0.0",
     "mockgoose": "^1.10.7",
     "mongoose": "~3.8.8",
-    "q": "~1.0.0",
+    "q": "^1.0.1",
     "supertest": "^0.14.0",
-    "underscore": "^1.7.0"
+    "underscore": "^1.7.0",
+    "winston": "^0.8.1"
   }
 }

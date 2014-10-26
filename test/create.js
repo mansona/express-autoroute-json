@@ -1,33 +1,31 @@
+/* jshint expr: true */
 //setup
 var autoroute = require('express-autoroute');
 var expect = require('chai').expect;
 var express = require('express');
-var mongoose = require('mongoose');
+var http = require('http');
+
 var path = require('path');
 var request = require('supertest');
+var Q = require('q');
 
-//mock the mongoose
-var mockgoose = require('mockgoose');
-mockgoose(mongoose);
-
-//internal bits
-var Chat = require('./models/chat');
+var fixture = require('./fixtures/loadData');
 
 var app;
 var server;
 
 describe('the create block', function () {
-    beforeEach(function (done) {
+    beforeEach(function() {
         //reset app
         app = express();
-        server = app.listen(255255, function(){
-            //load mockgoose data
-            require('./fixtures/loadData')(done);
+        server = http.createServer(app);
+        return Q.ninvoke(server, 'listen', 255255).then(function() {
+            return fixture.init();
         });
     });
 
     afterEach(function (done) {
-        mockgoose.reset();
+        fixture.reset();
         server.close(done);
     });
 
@@ -58,7 +56,5 @@ describe('the create block', function () {
                 done();
             });
         });
-    })
-
-
+    });
 });
