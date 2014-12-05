@@ -3,6 +3,7 @@ var executionFunction = require('./lib/execution');
 var findOne = require('./lib/findOne');
 var queryFunction = require('./lib/query');
 var sortFunction = require('./lib/sort');
+var selectFunction = require('./lib/select');
 var createFunction = require('./lib/create');
 var paginationFunction = require('./lib/pagination');
 var createExecution = require('./lib/createExecution');
@@ -27,6 +28,7 @@ module.exports = function (options) {
             queryFunction(options),
             paginationFunction(options),
             sortFunction(options),
+            selectFunction(options),
             executionFunction(options)
         ];
         outputJson.get["/" + resource + "/:id"] = [
