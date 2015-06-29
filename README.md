@@ -8,6 +8,12 @@ We have been using this library in production for about a year and it has served
 We will update the documentation when we are ready to release the final 3.0 version but for now this is all you need to get using the system today:
 
 ```
+npm install express-autoroute-json@prerelease
+```
+
+and use this in your route file just like before:
+
+```
 var autorouteJson = require('express-autoroute-json');
 
 //get your mongoose models
