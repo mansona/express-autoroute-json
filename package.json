@@ -6,7 +6,6 @@
   "engines": {
     "node": ">=0.10"
   },
-  "engineStrict": true,
   "scripts": {
     "test": "node_modules/mocha/bin/mocha",
     "test-watch": "node_modules/mocha/bin/mocha -w"
@@ -38,5 +37,8 @@
     "supertest": "^0.15.0",
     "underscore": "^1.7.0",
     "winston": "^0.9.0"
+  },
+  "dependencies": {
+    "pluralize": "^1.1.2"
   }
 }
