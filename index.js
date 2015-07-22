@@ -1,4 +1,5 @@
 var pluralize = require('pluralize');
+var _ = require('lodash');
 
 var authorisationFunction = require('./lib/authorisation');
 var createExecution = require('./lib/createExecution');
@@ -29,7 +30,9 @@ module.exports = function(options) {
     if (options.find) {
         outputJson.get = {};
         outputJson.get["/" + pluralize(resource)] = [
+            options.preMiddleware || identityMiddleware,
             options.authentication || identityMiddleware,
+            _.get(options, 'find.authentication', identityMiddleware),
             authorisationFunction(options),
             queryFunction(options),
             paginationFunction(options),
@@ -39,7 +42,9 @@ module.exports = function(options) {
             error
         ];
         outputJson.get["/" + pluralize(resource) + "/:id"] = [
+            options.preMiddleware || identityMiddleware,
             options.authentication || identityMiddleware,
+            _.get(options, 'find.authentication', identityMiddleware),
             authorisationFunction(options),
             findOne(options),
             error
@@ -48,7 +53,9 @@ module.exports = function(options) {
     if (options.create) {
         outputJson.post = {};
         outputJson.post["/" + pluralize(resource)] = [
+            options.preMiddleware || identityMiddleware,
             options.authentication || identityMiddleware,
+            _.get(options, 'create.authentication', identityMiddleware),
             createFunction(options),
             createExecution(options),
             error
@@ -58,7 +65,9 @@ module.exports = function(options) {
     if (options.update) {
         outputJson.put = {};
         outputJson.put["/" + pluralize(resource) + "/:id"] = [
+            options.preMiddleware || identityMiddleware,
             options.authentication || identityMiddleware,
+            _.get(options, 'update.authentication', identityMiddleware),
             authorisationFunction(options),
             updateOne(options),
             error
@@ -68,7 +77,9 @@ module.exports = function(options) {
     if (options.delete) {
         outputJson.delete = {};
         outputJson.delete["/" + pluralize(resource) + "/:id"] = [
+            options.preMiddleware || identityMiddleware,
             options.authentication || identityMiddleware,
+            _.get(options, 'delete.authentication', identityMiddleware),
             authorisationFunction(options),
             deleteOne(options),
             error
