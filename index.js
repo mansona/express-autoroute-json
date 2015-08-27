@@ -58,6 +58,7 @@ module.exports = function(options) {
             _.get(options, 'create.authentication', identityMiddleware),
             createFunction(options),
             createExecution(options),
+            _.get(options, 'create.postMiddleware', identityMiddleware),
             error
         ];
     }
@@ -70,6 +71,7 @@ module.exports = function(options) {
             _.get(options, 'update.authentication', identityMiddleware),
             authorisationFunction(options),
             updateOne(options),
+            _.get(options, 'update.postMiddleware', identityMiddleware),
             error
         ];
     }
@@ -82,6 +84,7 @@ module.exports = function(options) {
             _.get(options, 'delete.authentication', identityMiddleware),
             authorisationFunction(options),
             deleteOne(options),
+            _.get(options, 'delete.postMiddleware', identityMiddleware),
             error
         ];
     }
