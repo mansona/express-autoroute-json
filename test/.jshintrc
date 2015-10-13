@@ -1,6 +1,6 @@
 {
-    predef: [
-        'describe'
+    "predef": [
+        "describe"
     ],
     "expr": true,
     "node" : true,

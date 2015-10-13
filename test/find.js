@@ -8,7 +8,7 @@ var winston = require('winston');
 
 var path = require('path');
 var request = require('supertest');
-var _ = require('underscore')._;
+var _ = require('lodash');
 
 var fixture = require('./fixtures/loadData');
 
