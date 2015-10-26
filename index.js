@@ -5,6 +5,7 @@ var authorisationFunction = require('./lib/authorisation');
 var createExecution = require('./lib/createExecution');
 var createFunction = require('./lib/create');
 var deleteOne = require('./lib/deleteOne');
+var emptyMiddleware = require('./lib/emptyMiddleware');
 var error = require('./lib/error');
 var findMany= require('./lib/findMany');
 var findOne = require('./lib/findOne');
@@ -58,7 +59,7 @@ module.exports = function(options) {
             _.get(options, 'create.authentication', identityMiddleware),
             createFunction(options),
             createExecution(options),
-            _.get(options, 'create.postMiddleware', identityMiddleware),
+            _.get(options, 'create.postMiddleware', emptyMiddleware),
             error
         ];
     }
@@ -71,7 +72,7 @@ module.exports = function(options) {
             _.get(options, 'update.authentication', identityMiddleware),
             authorisationFunction(options),
             updateOne(options),
-            _.get(options, 'update.postMiddleware', identityMiddleware),
+            _.get(options, 'update.postMiddleware', emptyMiddleware),
             error
         ];
     }
@@ -84,7 +85,7 @@ module.exports = function(options) {
             _.get(options, 'delete.authentication', identityMiddleware),
             authorisationFunction(options),
             deleteOne(options),
-            _.get(options, 'delete.postMiddleware', identityMiddleware),
+            _.get(options, 'delete.postMiddleware', emptyMiddleware),
             error
         ];
     }
