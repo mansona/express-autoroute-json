@@ -1,6 +1,11 @@
 {
     "predef": [
-        "describe"
+        "describe",
+        "it",
+        "before",
+        "beforeEach",
+        "after",
+        "afterEach"
     ],
     "expr": true,
     "node" : true,

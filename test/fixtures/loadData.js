@@ -1,23 +1,41 @@
 //mock the mongoose
 var mongoose = require('mongoose');
-var mockgoose = require('mockgoose');
-mockgoose(mongoose);
 
 var Chat = require('../models/chat')();
 var Q = require('q');
 
-function init(){
+function init() {
 
-    var promises = [1,2,3,4,5,6,7,8,9,10].map(function(i){
-        var chat = new Chat({name: "person" + i , count: i});
-        return Q.ninvoke(chat, 'save');
+  var promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function(i) {
+    var chat = new Chat({
+      name: 'person' + i,
+      count: i,
     });
+    return Q.ninvoke(chat, 'save');
+  });
+
+  return Q.all(promises);
+}
+
+function reset() {
+  //only allow this in test
+  if (process.env.NODE_ENV === 'test') {
+    var collections = mongoose.connection.collections;
+
+    var promises = Object.keys(collections).map(function(collection) {
+      return Q.ninvoke(collections[collection], 'remove');
+    });
+
     return Q.all(promises);
+  } else {
+    var errorMessage = 'Excuse me kind sir, but may I enquire as to why you are currently running reset() in a non test environment? I do propose that it is a beastly thing to do and kindly ask you to refrain from this course of action. Sincerely yours, The Computer.';
+    console.log(errorMessage);
+    console.error(errorMessage);
+    throw new Error(errorMessage);
+  }
 }
 
 module.exports = {
-    init: init,
-    reset: function(){
-        mockgoose.reset();
-    }
+  init: init,
+  reset: reset,
 };
