@@ -1,151 +1,141 @@
-//setup
+var _ = require('lodash');
 var autoroute = require('express-autoroute');
 var expect = require('chai').expect;
-var express = require('express');
-var http = require('http');
-var Q = require('q');
-var winston = require('winston');
-
 var path = require('path');
 var request = require('supertest');
-var _ = require('lodash');
+var winston = require('winston');
 
 var fixture = require('../fixtures/loadData');
 
-//internal bits
 var authorisationFunction = require('../../lib/authorisation');
 var queryFunction = require('../../lib/query');
 var Chat = require('../models/chat')();
 
-var app;
-var server;
-
 describe('the find block', function() {
   beforeEach(function() {
-    //reset app
-    app = express();
-    server = http.createServer(app);
-    return Q.ninvoke(server, 'listen', 255255).then(function() {
-      return fixture.init();
-    });
+    // reset app
+    return fixture.init();
   });
 
-  afterEach(function(done) {
-    fixture.reset().then(function() {
-      server.close(done);
-    });
+  afterEach(function() {
+    return fixture.reset();
   });
 
   it('should return return status 200 when find is present', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find'),
     });
 
-    request(app).get('/chats').expect(200).end(done);
+    request(global.app).get('/chats').expect(200).end(done);
   });
 
   it('should return 404 when there is no find object', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'modelOnly')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'modelOnly'),
     });
 
-    request(app).get('/chats').expect(404).end(done);
+    request(global.app).get('/chats').expect(404).end(done);
   });
 
   it('should return return all models when find is present', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find'),
     });
 
-    request(app).get('/chats').expect(200).expect(function(res) {
+    request(global.app).get('/chats').expect(200).expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(10);
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should return only return models that fit the query', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findQuery'),
     });
 
-    request(app).get('/chats?min=3').expect(200).expect(function(res) {
+    request(global.app).get('/chats?min=3').expect(200).expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(7);
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should return a sorted array of objects', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'sortDown'),
     });
 
-    request(app).get('/chats?sortup=true').expect(200).expect(function(res) {
+    request(global.app).get('/chats?sortup=true').expect(200).expect(function(res) {
       expect(res.body.chats).to.deep.equal(_.sortBy(res.body.chats, function(item) {
         return item.count;
       }));
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should return a reverse sorted array of objects', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'sortDown'),
     });
 
-    request(app).get('/chats?sortdown=true').expect(200).expect(function(res) {
+    request(global.app).get('/chats?sortdown=true').expect(200).expect(function(res) {
       expect(res.body.chats).to.deep.equal(_.sortBy(res.body.chats, function(item) {
         return 1 - item.count;
       }));
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should allow authenticated users to get objects', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authentication'),
     });
 
-    request(app).get('/chats?userlevel=max').expect(200).expect(function(res) {
+    request(global.app).get('/chats?userlevel=max').expect(200).expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(10);
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should not allow authenticated users to get objects', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authentication'),
     });
 
-    request(app).get('/chats?userlevel=noob').expect(401).end(done);
+    request(global.app).get('/chats?userlevel=noob').expect(401).end(done);
   });
 
   it('should only allow me to see the number of users i am allowed to see', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authorisation'),
     });
 
-    request(app).get('/chats').expect(function(res) {
+    request(global.app).get('/chats').expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(5);
     }).end(done);
   });
 
   it('should combine authorisation and query correctly', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authorisation'),
     });
 
-    request(app).get('/chats?min=3').expect(function(res) {
+    request(global.app).get('/chats?min=3').expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(2);
     }).end(done);
   });
 
   it('should not allow me to see items that I am not authorised to see', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authorisation'),
     });
@@ -153,23 +143,23 @@ describe('the find block', function() {
     Chat.findOne({
       count: 8,
     }).exec().then(function(chat) {
-      request(app).get('/chats/' + chat._id).expect(404).end(done);
+      request(global.app).get('/chats/' + chat._id).expect(404).end(done);
     });
-
   });
 
+  // eslint-disable-next-line max-len
   it('should restrict a query to only allow me to see the number of users i am allowed to see', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'authorisation'),
     });
 
-    request(app).get('/chats?min=3').expect(function(res) {
+    request(global.app).get('/chats?min=3').expect(function(res) {
       expect(_.size(res.body.chats)).to.equal(2);
     }).end(done);
   });
 
-  //TODO convert this to a real test now that we've removed mockgoose
+  // TODO convert this to a real test now that we've removed mockgoose
   it.skip('should build an $and query when there are competing restrictions', function() {
     var options = {
       model: require('./models/chat')(),
@@ -227,13 +217,12 @@ describe('the find block', function() {
       count: 42,
     });
     chat.save(function(err, chatObj) {
-
-      autoroute(app, {
+      autoroute(global.app, {
         throwErrors: true,
         routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find'),
       });
 
-      request(app).get('/chats/' + chatObj._id).expect(200).expect(function(res) {
+      request(global.app).get('/chats/' + chatObj._id).expect(200).expect(function(res) {
         expect(_.omit(res.body, '__v')).to.deep.equal({
           chats: {
             __v: 0,
@@ -242,12 +231,13 @@ describe('the find block', function() {
             _id: chatObj.id,
           },
         });
-      }).end(done);
+      })
+      .end(done);
     });
   });
 
   it('should return a chats array and a meta array', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       logger: winston,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
@@ -255,76 +245,84 @@ describe('the find block', function() {
 
     winston.log('done loading');
 
-    request(app).get('/chats?offset=0&limit=10').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=0&limit=10').expect(200).expect(function(res) {
       expect(res.body).to.have.property('chats');
       expect(res.body).to.have.property('meta');
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should have a chats array with a single item based on offset and limit', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
     });
 
-    request(app).get('/chats?offset=0&limit=1').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=0&limit=1').expect(200).expect(function(res) {
       expect(_.size(res.body)).to.equal(2);
       expect(_.size(res.body.chats)).to.equal(1);
-    }).end(done);
+    })
+    .end(done);
   });
 
+  // eslint-disable-next-line max-len
   it('should return a meta object with null previous object and a next pointing to the next item', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
     });
 
-    request(app).get('/chats?offset=0&limit=1').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=0&limit=1').expect(200).expect(function(res) {
       expect(_.size(res.body)).to.equal(2);
       expect(_.size(res.body.chats)).to.equal(1);
       expect(res.body.meta.previous).to.equal(null);
       expect(res.body.meta.next.offset).to.equal(1);
       expect(res.body.meta.next.limit).to.equal(1);
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should return a chats array with five items based on offset and limit', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
     });
 
-    request(app).get('/chats?offset=5&limit=5').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=5&limit=5').expect(200).expect(function(res) {
       expect(_.size(res.body)).to.equal(2);
       expect(_.size(res.body.chats)).to.equal(5);
-    }).end(done);
+    })
+    .end(done);
   });
 
+  // eslint-disable-next-line max-len
   it('should return a meta object with a previous pointing to the previous item and a null next object', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
     });
 
-    request(app).get('/chats?offset=5&limit=5').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=5&limit=5').expect(200).expect(function(res) {
       expect(_.size(res.body)).to.equal(2);
       expect(_.size(res.body.chats)).to.equal(5);
       expect(res.body.meta.previous.offset).to.equal(0);
       expect(res.body.meta.previous.limit).to.equal(5);
       expect(res.body.meta.next).to.equal(null);
-    }).end(done);
+    })
+    .end(done);
   });
 
   it('should return a meta object next and previous objects which should be null', function(done) {
-    autoroute(app, {
+    autoroute(global.app, {
       throwErrors: true,
-      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination')
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'findPagination'),
     });
 
-    request(app).get('/chats?offset=0&limit=20').expect(200).expect(function(res) {
+    request(global.app).get('/chats?offset=0&limit=20').expect(200).expect(function(res) {
       expect(_.size(res.body)).to.equal(2);
       expect(res.body.meta.previous).to.equal(null);
       expect(res.body.meta.next).to.equal(null);
-    }).end(done);
+    })
+    .end(done);
   });
 });
