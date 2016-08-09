@@ -2,10 +2,30 @@ var mongoose = require('mongoose');
 var Q = require('q');
 var express = require('express');
 var http = require('http');
+var Validator = require('jsonschema').Validator;
+
 
 var httpServer;
 
 Q.longStackSupport = true;
+
+global.jsonAPIVerify = function(done) {
+  return function(err, res) {
+    if (err) throw err;
+
+    var validator = new Validator();
+
+    // eslint-disable-next-line global-require
+    var result = validator.validate(res.body, require('./schema.json'));
+
+    if (!result.valid) {
+      console.log("body", res.body);
+      done(result.errors);
+    } else {
+      done();
+    }
+  };
+};
 
 before(function() {
   if (!mongoose.connection.readyState) {

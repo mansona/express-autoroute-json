@@ -39,14 +39,16 @@
     "express": "^4.9.8",
     "express-autoroute": "^1.2.1",
     "istanbul": "^0.4.4",
+    "jsonschema": "^1.1.0",
     "mocha": "^3.0.2",
     "mongoose": "^4.5.8",
-    "q": "^1.0.1",
     "supertest": "^2.0.0",
     "winston": "^2.2.0"
   },
   "dependencies": {
+    "jsonapi-serializer": "^3.3.0",
     "lodash": "^3.10.0",
-    "pluralize": "^3.0.0"
+    "pluralize": "^3.0.0",
+    "q": "^1.0.1"
   }
 }

@@ -19,6 +19,7 @@
       "func-names": [0],
       "new-cap": [2 , { "capIsNewExceptions": ["Q", "ObjectId"] }],
       "no-unused-expressions": [0],
-      "no-underscore-dangle": [2, { "allow": ["_id"] }]
+      "no-underscore-dangle": [2, { "allow": ["_id"] }],
+      "vars-on-top": 0
     }
 }
