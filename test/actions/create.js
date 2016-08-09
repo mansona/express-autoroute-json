@@ -7,6 +7,8 @@ var request = require('supertest');
 
 var fixture = require('../fixtures/loadData');
 
+var Project = require('../models/project')();
+
 describe('the create block', function() {
   beforeEach(function() {
     global.app.use(bodyParser.json());
@@ -70,5 +72,49 @@ describe('the create block', function() {
         })
         .end(global.jsonAPIVerify(done));
     });
+  });
+
+  it('should read dasherized attributes on the request body', function(done) {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'createProjects'),
+    });
+
+    request(global.app)
+      .post('/projects')
+      .type('application/json')
+      .send({
+        data: {
+          type: 'projects',
+          attributes: {
+            title: 'face',
+            description: 'facey face',
+            'project-start': '2016-08-18T23:00:00.000Z',
+            'project-end': '2016-08-30T23:00:00.000Z',
+            tags: ['one-tag', 'two-tag', 'three-tag', 'face'],
+            'is-active': false,
+          },
+        },
+      })
+      .expect(201)
+      .end(function(err, res) {
+        expect(err).to.not.be.ok;
+
+        Project.findOne({
+          _id: res.body.data.id,
+        }).then(function(project) {
+          expect(project).to.have.property('title', 'face');
+          expect(project).to.have.property('description', 'facey face');
+          expect(project).to.have.property('projectStart');
+          expect(project.projectStart.getTime())
+            .to.equal(new Date('2016-08-18T23:00:00.000Z').getTime());
+          expect(project).to.have.property('projectEnd');
+          expect(project.projectEnd.getTime())
+            .to.equal(new Date('2016-08-30T23:00:00.000Z').getTime());
+          expect(project).to.have.property('tags');
+          expect(project).to.have.property('isActive', false);
+        })
+        .then(done, done);
+      });
   });
 });

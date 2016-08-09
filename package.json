@@ -46,6 +46,7 @@
     "winston": "^2.2.0"
   },
   "dependencies": {
+    "camelcase-keys": "^3.0.0",
     "jsonapi-serializer": "^3.3.0",
     "lodash": "^3.10.0",
     "pluralize": "^3.0.0",
