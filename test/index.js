@@ -4,7 +4,6 @@ var express = require('express');
 var http = require('http');
 var Validator = require('jsonschema').Validator;
 
-
 var httpServer;
 
 Q.longStackSupport = true;
@@ -19,7 +18,6 @@ global.jsonAPIVerify = function(done) {
     var result = validator.validate(res.body, require('./schema.json'));
 
     if (!result.valid) {
-      console.log("body", res.body);
       done(result.errors);
     } else {
       done();

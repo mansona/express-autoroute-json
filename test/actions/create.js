@@ -23,16 +23,23 @@ describe('the create block', function() {
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'create'),
     });
 
-    request(global.app).post('/chats', {
-      chats: {
-        name: 'name',
-        count: 0,
-      },
-    }).expect(201).end(function(err, response) {
-      expect(err).to.not.be.ok;
-      expect(response.body).to.have.deep.property('chats._id');
-      done();
-    });
+    request(global.app)
+      .post('/chats')
+      .type('application/json')
+      .send({
+        data: {
+          attributes: {
+            name: 'name',
+            count: 0,
+          },
+        },
+      })
+      .expect(201)
+      .expect(function(res) {
+        expect(res.body).to.have.deep.property('data.id');
+        expect(res.body).to.have.deep.property('data.attributes.name', 'name');
+      })
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should be able to retrieve the created resource', function(done) {
@@ -41,19 +48,27 @@ describe('the create block', function() {
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'create'),
     });
 
-    request(global.app).post('/chats', {
-      chats: {
-        name: 'name',
-        count: 0,
+    request(global.app)
+    .post('/chats')
+    .type('application/json')
+    .send({
+      data: {
+        type: 'chats',
+        attributes: {
+          name: 'name',
+          count: 0,
+        },
       },
-    }).end(function(err, postResponse) {
+    })
+    .end(function(err, postResponse) {
       expect(err).to.not.be.ok;
-      request(global.app).get('/chats/' + postResponse.body.chats._id)
-        .expect(200).end(function(chatsErr, getResponse) {
-          expect(chatsErr).to.not.be.ok;
-          expect(postResponse.body._id).to.equal(getResponse.body._id);
-          done();
-        });
+      request(global.app).get('/chats/' + postResponse.body.data.id)
+        .expect(200)
+        .expect(function(getResponse) {
+          expect(postResponse.body.data.id).to.equal(getResponse.body.data.id);
+          expect(getResponse.body.data).to.have.deep.property('attributes.name', 'name');
+        })
+        .end(global.jsonAPIVerify(done));
     });
   });
 });
