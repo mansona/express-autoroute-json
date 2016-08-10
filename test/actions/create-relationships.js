@@ -36,8 +36,10 @@ describe('the create block with relationships', function() {
           },
           relationships: {
             spouse: {
-              type: 'people',
-              data: spouseId,
+              data: {
+                type: 'people',
+                id: spouseId,
+              },
             },
           },
         },
