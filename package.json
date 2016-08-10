@@ -48,7 +48,7 @@
   "dependencies": {
     "camelcase-keys": "^3.0.0",
     "jsonapi-serializer": "^3.3.0",
-    "lodash": "^3.10.0",
+    "lodash": "^4.14.2",
     "pluralize": "^3.0.0",
     "q": "^1.0.1"
   }
