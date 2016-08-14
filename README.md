@@ -1,6 +1,7 @@
-[![Build Status](https://travis-ci.org/stonecircle/express-autoroute-json.png?branch=master)](https://travis-ci.org/stonecircle/express-autoroute-json)
+[![Build Status](https://travis-ci.org/stonecircle/express-autoroute-json.svg?branch=master)](https://travis-ci.org/stonecircle/express-autoroute-json)
 [![devDependency Status](https://david-dm.org/stonecircle/express-autoroute-json/dev-status.svg?theme=shields.io)](https://david-dm.org/stonecircle/express-autoroute-json#info=devDependencies)
-[![Code Climate](https://codeclimate.com/github/stonecircle/express-autoroute-json.png)](https://codeclimate.com/github/stonecircle/express-autoroute-json)
+[![Code Climate](https://codeclimate.com/github/stonecircle/express-autoroute-json/badges/gpa.svg)](https://codeclimate.com/github/stonecircle/express-autoroute-json)
+[![Test Coverage](https://codeclimate.com/github/stonecircle/express-autoroute-json/badges/coverage.svg)](https://codeclimate.com/github/stonecircle/express-autoroute-json/coverage)
 
 # Documentation Pending
 We have just completed the rewrite and express-autoroute-json now speaks [JSON:API](https://jsonapi.org)
