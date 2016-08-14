@@ -1,15 +1,15 @@
 {
   "name": "express-autoroute-json",
-  "version": "2.1.1",
+  "version": "3.0.0-alpha2.17",
   "description": "Express Auto Route Json is an automatic JSON 'REST' api builder for express-autoroute",
   "main": "index.js",
   "engines": {
     "node": ">=0.10"
   },
-  "engineStrict": true,
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha",
-    "test-watch": "node_modules/mocha/bin/mocha -w"
+    "test": "NODE_ENV=test mocha --recursive --reporter spec",
+    "test-watch": "npm run test -- -w --reporter min",
+    "coverage": "NODE_ENV=test istanbul cover _mocha -- -R spec --recursive"
   },
   "repository": {
     "type": "git",
@@ -28,15 +28,28 @@
   },
   "homepage": "https://github.com/Blooie/express-autoroute-json",
   "devDependencies": {
-    "chai": "^2.0.0",
+    "body-parser": "^1.14.2",
+    "chai": "^3.5.0",
+    "codeclimate-test-reporter": "^0.3.3",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^6.0.0",
     "express": "^4.9.8",
     "express-autoroute": "^1.2.1",
-    "mocha": "^2.0.0",
-    "mockgoose": "^1.10.7",
-    "mongoose": "~3.8.8",
-    "q": "^1.0.1",
-    "supertest": "^0.15.0",
-    "underscore": "^1.7.0",
-    "winston": "^0.9.0"
+    "istanbul": "^0.4.4",
+    "jsonschema": "^1.1.0",
+    "mocha": "^3.0.2",
+    "mongoose": "^4.5.8",
+    "supertest": "^2.0.0",
+    "winston": "^2.2.0"
+  },
+  "dependencies": {
+    "camelcase-keys": "^3.0.0",
+    "jsonapi-serializer": "^3.3.0",
+    "lodash": "^4.14.2",
+    "pluralize": "^3.0.0",
+    "q": "^1.0.1"
   }
 }

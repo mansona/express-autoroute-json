@@ -1,13 +1,13 @@
 var mongoose = require('mongoose');
 
-var Chat = require('../models/chat')();
+var Chat = require('../../models/person')();
 var Q = require('q');
 
 function init() {
   var promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function(i) {
     var chat = new Chat({
-      name: 'person' + i,
-      count: i,
+      name: 'human ' + i,
+      age: 20 + i,
     });
     return Q.ninvoke(chat, 'save');
   });

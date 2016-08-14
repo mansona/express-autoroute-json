@@ -1,7 +1,9 @@
 var autorouteJson = require('../../../');
-var Chats = require('../../models/chat')();
+var Project = require('../../models/project')();
 
 module.exports.autoroute = autorouteJson({
-  model: Chats,
+  model: Project,
+
   find: {},
+  update: {},
 });
