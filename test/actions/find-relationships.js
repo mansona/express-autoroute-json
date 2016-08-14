@@ -43,8 +43,7 @@ describe('the find block with relationships', function() {
               .to.have.deep.property('spouse.data.id', personTwo.id);
           })
           .end(global.jsonAPIVerify(done));
-      })
-      .then(null, done);
+      });
     });
   });
 

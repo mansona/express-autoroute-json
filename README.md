@@ -1,11 +1,11 @@
-[![Build Status](https://travis-ci.org/Blooie/express-autoroute-json.png?branch=master)](https://travis-ci.org/Blooie/express-autoroute-json)
-[![devDependency Status](https://david-dm.org/Blooie/express-autoroute-json/dev-status.svg?theme=shields.io)](https://david-dm.org/Blooie/express-autoroute-json#info=devDependencies)
-[![Code Climate](https://codeclimate.com/github/Blooie/express-autoroute-json.png)](https://codeclimate.com/github/Blooie/express-autoroute-json)
+[![Build Status](https://travis-ci.org/stonecircle/express-autoroute-json.png?branch=master)](https://travis-ci.org/Blooie/express-autoroute-json)
+[![devDependency Status](https://david-dm.org/stonecircle/express-autoroute-json/dev-status.svg?theme=shields.io)](https://david-dm.org/Blooie/express-autoroute-json#info=devDependencies)
+[![Code Climate](https://codeclimate.com/github/stonecircle/express-autoroute-json.png)](https://codeclimate.com/github/Blooie/express-autoroute-json)
 
-# Rewrite pending
-We have been using this library in production for about a year and it has served us well. We are now in the process of a rewrite to allow us to get the use of autoroute-json without the need for so much boilerplate code.
+# Documentation Pending
+We have just completed the rewrite and express-autoroute-json now speaks [JSON:API](https://jsonapi.org)
 
-We will update the documentation when we are ready to release the final 3.0 version but for now this is all you need to get using the system today:
+We will be working on documentation over the coming weeks
 
 ```
 npm install express-autoroute-json@prerelease
@@ -41,7 +41,7 @@ module.exports.autoroute = autorouteJson({
 ```
 
 # Licence
-Copyright (c) 2015, Chris Manson <chris@bloo.ie>, Blooie Limited <info@bloo.ie>
+Copyright (c) 2016, Stone Circle <info@stonecircle.ie>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

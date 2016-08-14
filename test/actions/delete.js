@@ -28,7 +28,7 @@ describe('the delete block', function() {
     request(global.app)
       .delete('/chats/sflskdjflsdkjfFACEFACE')
       .expect(404)
-      .end(done);
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should return 404 if you try to delete something that doesn\'t exist', function(done) {
@@ -40,7 +40,7 @@ describe('the delete block', function() {
     request(global.app)
       .delete('/chats/' + mongoose.Types.ObjectId())
       .expect(404)
-      .end(done);
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should return nothing with a status of 204 if successful', function(done) {
@@ -67,14 +67,14 @@ describe('the delete block', function() {
       request(global.app)
         .delete('/chats/' + chat.id)
         .end(function(err) {
-          expect(err).to.not.be.ok;
+          if (err) return done(err);
 
-          Chat.findOne({
+          return Chat.findOne({
             _id: chat.id,
           }).then(function(secondChat) {
             expect(secondChat).to.not.be.ok;
-          }).then(done, done);
+          });
         });
-    });
+    }).then(done, done);
   });
 });
