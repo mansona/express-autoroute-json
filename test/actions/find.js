@@ -3,7 +3,6 @@ var autoroute = require('express-autoroute');
 var expect = require('chai').expect;
 var path = require('path');
 var request = require('supertest');
-var winston = require('winston');
 
 var fixture = require('../fixtures/loadData');
 
@@ -263,5 +262,17 @@ describe('the find block', function() {
         })
         .end(global.jsonAPIVerify(done));
     });
+  });
+
+  it('should be able to change the name of the resource', function(done) {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-resource'),
+    });
+
+    request(global.app)
+      .get('/monkeys')
+      .expect(200)
+      .end(global.jsonAPIVerify(done));
   });
 });
