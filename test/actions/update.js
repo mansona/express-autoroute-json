@@ -161,6 +161,34 @@ describe('the update block', function() {
     });
   });
 
+  it('should respond with the correct data after patch', function(done) {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'update'),
+    });
+
+    Chat.findOne().then(function(chat) {
+      var originalChat = chat.toJSON();
+      var newName = 'this is a super new name';
+      request(global.app)
+        .patch('/chats/' + chat.id)
+        .type('application/json')
+        .send({
+          data: {
+            attributes: {
+              count: chat.count + 10,
+              name: newName,
+            },
+          },
+        })
+        .expect(200)
+        .expect(function(res) {
+          expect(res.body).to.have.deep.property('data.attributes.count', originalChat.count + 10);
+        })
+        .end(global.jsonAPIVerify(done));
+    });
+  });
+
   it('should convert dasherized patch to camelCase', function(done) {
     autoroute(global.app, {
       throwErrors: true,
