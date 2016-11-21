@@ -24,9 +24,9 @@
   "author": "Chris Manson chris@stonecircle.io",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Blooie/express-autoroute-json/issues"
+    "url": "https://github.com/stonecircle/express-autoroute-json/issues"
   },
-  "homepage": "https://github.com/Blooie/express-autoroute-json",
+  "homepage": "https://github.com/stonecircle/express-autoroute-json",
   "devDependencies": {
     "body-parser": "^1.14.2",
     "chai": "^3.5.0",
