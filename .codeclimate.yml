@@ -7,6 +7,10 @@ engines:
       - javascript
   eslint:
     enabled: true
+    channel: eslint-2
+    checks:
+      import/no-unresolved:
+        enabled: false
   fixme:
     enabled: true
 ratings:
