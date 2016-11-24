@@ -10,6 +10,7 @@
 
     "extends": "airbnb",
     "rules": {
+      "max-len": 0,
       "no-var": 0,
       "prefer-template": 0,
       "space-before-function-paren": 0,

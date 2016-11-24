@@ -13,6 +13,10 @@ var schema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'House',
   },
+  pets: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Pet',
+  }],
 });
 
 // eslint-disable-next-line consistent-return
