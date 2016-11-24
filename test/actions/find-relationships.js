@@ -47,7 +47,6 @@ describe('the find block with relationships', function() {
     });
   });
 
-  // eslint-disable-next-line max-len
   it('should show relationship blocks even if there is no mongoose model available', function(done) {
     Person.findOne().then(function(person) {
       var addressId = new mongoose.Types.ObjectId();
@@ -63,6 +62,34 @@ describe('the find block with relationships', function() {
             expect(res.body.data).to.have.property('relationships');
             expect(res.body.data.relationships)
               .to.have.deep.property('address.data.id', addressId.toString());
+          })
+          .end(global.jsonAPIVerify(done));
+      });
+    });
+  });
+
+  it('should work with arrays of relationship objects', function(done) {
+    Person.findOne().then(function(person) {
+      var pets = [
+        new mongoose.Types.ObjectId(),
+        new mongoose.Types.ObjectId(),
+        new mongoose.Types.ObjectId(),
+        new mongoose.Types.ObjectId(),
+      ];
+      // person gets 4 dogs
+      // eslint-disable-next-line no-param-reassign
+      person.pets = pets;
+
+      person.save().then(function() {
+        request(global.app)
+          .get('/people/' + person.id)
+          .expect(200)
+          .expect(function(res) {
+            expect(res.body.data).to.have.property('relationships');
+            expect(res.body.data.relationships)
+              .to.have.deep.property('pets');
+            expect(res.body.data.relationships)
+              .to.have.deep.property('pets.data[0].id', pets[0].toString());
           })
           .end(global.jsonAPIVerify(done));
       });
