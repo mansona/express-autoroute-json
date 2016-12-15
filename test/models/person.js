@@ -4,7 +4,10 @@ var mongoose = require('mongoose');
 var schema = mongoose.Schema({
   name: String,
   age: Number,
-
+  inLaw: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Person',
+  },
   spouse: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Person',

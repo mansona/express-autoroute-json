@@ -7,6 +7,8 @@ var request = require('supertest');
 
 var fixture = require('../fixtures/loadData');
 
+var Person = require('../models/person')();
+
 describe('the create block with relationships', function() {
   beforeEach(function() {
     global.app.use(bodyParser.json());
@@ -54,6 +56,46 @@ describe('the create block with relationships', function() {
       .end(global.jsonAPIVerify(done));
   });
 
+  it('should camelCase relationship keys if they are dasherized', function(done) {
+    var inlawId = new mongoose.Types.ObjectId();
+    request(global.app)
+      .post('/people')
+      .type('application/json')
+      .send({
+        data: {
+          attributes: {
+            name: 'namey mc nameface',
+            age: 29,
+          },
+          relationships: {
+            'in-law': {
+              data: {
+                type: 'people',
+                id: inlawId,
+              },
+            },
+          },
+        },
+      })
+      .expect(201)
+      .expect(function(res) {
+        expect(res.body)
+          .to.have.deep.property('data.relationships.in-law.data.id', inlawId.toString());
+      })
+      .end(function(err, res) {
+        expect(err).to.not.be.ok;
+
+        Person.findOne({
+          _id: res.body.data.id,
+        })
+        .then(function(person) {
+          expect(person).to.have.property('inLaw');
+          global.jsonAPIVerify(done)(err, res);
+        })
+        .then(null, done);
+      });
+  });
+
   it('should not have a relationship if it is not on the request body', function(done) {
     request(global.app)
       .post('/people')
@@ -75,6 +117,7 @@ describe('the create block with relationships', function() {
       })
       .end(global.jsonAPIVerify(done));
   });
+
   it('should not add relationships that are not on the model', function(done) {
     var monkeyfaceId = new mongoose.Types.ObjectId();
     request(global.app)
