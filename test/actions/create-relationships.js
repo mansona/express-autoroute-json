@@ -56,7 +56,7 @@ describe('the create block with relationships', function() {
       .end(global.jsonAPIVerify(done));
   });
 
-  it.only('should camelCase relationship keys if they are dasherized', function(done) {
+  it('should camelCase relationship keys if they are dasherized', function(done) {
     var inlawId = new mongoose.Types.ObjectId();
     request(global.app)
       .post('/people')
