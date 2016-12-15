@@ -90,8 +90,9 @@ describe('the create block with relationships', function() {
         })
         .then(function(person) {
           expect(person).to.have.property('inLaw');
+          global.jsonAPIVerify(done)(err, res);
         })
-        .then(done, done);
+        .then(null, done);
       });
   });
 
