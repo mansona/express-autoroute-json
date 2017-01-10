@@ -2,9 +2,9 @@ sudo: false
 language: node_js
 services: mongodb
 node_js:
+  - 7 
   - 6
   - 4
-  - 0.12
 addons:
   code_climate:
     repo_token: 10ca3ddfc7f3a60104ec6b7d7da0aa23acaa5caa252c7257c06d19f46b5acb00
