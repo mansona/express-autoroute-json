@@ -1,15 +1,18 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Q = require('q');
 
-var Chat = require('../models/chat')();
-var Q = require('q');
+const Chat = require('../models/chat')();
+
+const chats = [];
 
 function init() {
   var promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function(i) {
-    var chat = new Chat({
+    return Chat.create({
       name: 'person' + i,
       count: i,
+    }).then(chatObject => {
+      chats.push(chatObject);
     });
-    return Q.ninvoke(chat, 'save');
   });
 
   return Q.all(promises);
@@ -18,6 +21,8 @@ function init() {
 function reset() {
   // only allow this in test
   if (process.env.NODE_ENV === 'test') {
+    chats.length = 0;
+
     var collections = mongoose.connection.collections;
 
     var promises = Object.keys(collections).map(function(collection) {
@@ -37,4 +42,7 @@ function reset() {
 module.exports = {
   init: init,
   reset: reset,
+  data: {
+    chats,
+  },
 };

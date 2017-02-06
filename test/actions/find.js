@@ -275,4 +275,48 @@ describe('the find block', function() {
       .expect(200)
       .end(global.jsonAPIVerify(done));
   });
+
+  describe('- the process fuction -', function() {
+    it('should processs multiple objects', function(done) {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-process'),
+      });
+
+      request(global.app)
+        .get('/chats')
+        .expect(200)
+        .expect(function(res) {
+          expect(_.omit(res.body.data[0], 'id')).to.deep.equal({
+            type: 'chats',
+            attributes: {
+              name: 'person1 processed',
+              count: 1,
+            },
+          });
+        })
+        .end(global.jsonAPIVerify(done));
+    });
+
+    it('should processs single objects', function(done) {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-process'),
+      });
+
+      request(global.app)
+        .get(`/apples/${fixture.data.chats[0]._id}`)
+        .expect(200)
+        .expect(function(res) {
+          expect(_.omit(res.body.data, 'id')).to.deep.equal({
+            type: 'apples',
+            attributes: {
+              name: 'person1 processed once',
+              count: 1,
+            },
+          });
+        })
+        .end(global.jsonAPIVerify(done));
+    });
+  });
 });
