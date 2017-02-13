@@ -276,6 +276,42 @@ describe('the find block', function() {
       .end(global.jsonAPIVerify(done));
   });
 
+  describe.only('- selfReferences -', function() {
+    it('should add the objectId as a selfReference relationship when querying multiple using deprecated syntax', function(done) {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-selfReference'),
+      });
+
+      request(global.app)
+        .get('/chats')
+        .expect(200)
+        .expect(function(res) {
+          res.body.data.forEach(item => {
+            expect(item.relationships).to.have.property('face');
+            expect(item.relationships.face).to.deep.equal({ data: { type: 'mySuperType', id: item.id } });
+          });
+        })
+        .end(global.jsonAPIVerify(done));
+    });
+
+    it('should add the objectId as a selfReference relationship when querying one using deprecated syntax', function(done) {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-selfReference'),
+      });
+
+      request(global.app)
+        .get(`/chats/${fixture.data.chats[0]._id}`)
+        .expect(200)
+        .expect(function(res) {
+          expect(res.body.data.relationships).to.have.property('face');
+          expect(res.body.data.relationships.face).to.deep.equal({ data: { type: 'mySuperType', id: res.body.data.id } });
+        })
+        .end(global.jsonAPIVerify(done));
+    });
+  });
+
   describe('- the process fuction -', function() {
     it('should processs multiple objects', function(done) {
       autoroute(global.app, {
