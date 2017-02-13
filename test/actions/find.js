@@ -276,7 +276,7 @@ describe('the find block', function() {
       .end(global.jsonAPIVerify(done));
   });
 
-  describe.only('- selfReferences -', function() {
+  describe('- selfReferences -', function() {
     it('should add the objectId as a selfReference relationship when querying multiple using deprecated syntax', function(done) {
       autoroute(global.app, {
         throwErrors: true,
