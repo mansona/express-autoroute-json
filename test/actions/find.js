@@ -326,8 +326,8 @@ describe('the find block', function() {
           expect(_.omit(res.body.data[0], 'id')).to.deep.equal({
             type: 'chats',
             attributes: {
-              name: 'person1 processed',
-              count: 1,
+              name: `person${res.body.data[0].attributes.count} processed`,
+              count: res.body.data[0].attributes.count,
             },
           });
         })
@@ -340,19 +340,26 @@ describe('the find block', function() {
         routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-process'),
       });
 
-      request(global.app)
-        .get(`/apples/${fixture.data.chats[0]._id}`)
-        .expect(200)
-        .expect(function(res) {
-          expect(_.omit(res.body.data, 'id')).to.deep.equal({
-            type: 'apples',
-            attributes: {
-              name: 'person1 processed once',
-              count: 1,
-            },
-          });
-        })
-        .end(global.jsonAPIVerify(done));
+      Chat.create({
+        name: 'should processs single objects',
+        count: 88127,
+      }).then((chat) => {
+        request(global.app)
+          .get(`/apples/${chat._id}`)
+          .expect(200)
+          .expect(function(res) {
+            expect(_.omit(res.body.data, 'id')).to.deep.equal({
+              type: 'apples',
+              attributes: {
+                name: 'person1 processed once',
+                count: 88127,
+              },
+            });
+          })
+          .end(global.jsonAPIVerify(done));
+      });
+    });
+  });
     });
   });
 });
