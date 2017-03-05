@@ -9,6 +9,7 @@ var fixture = require('../fixtures/loadData');
 var authorisationFunction = require('../../lib/authorisation');
 var queryFunction = require('../../lib/query');
 var Chat = require('../models/chat')();
+var Project = require('../models/project')();
 
 describe('the find block', function() {
   beforeEach(function() {
@@ -326,8 +327,8 @@ describe('the find block', function() {
           expect(_.omit(res.body.data[0], 'id')).to.deep.equal({
             type: 'chats',
             attributes: {
-              name: 'person1 processed',
-              count: 1,
+              name: `person${res.body.data[0].attributes.count} processed`,
+              count: res.body.data[0].attributes.count,
             },
           });
         })
@@ -340,19 +341,54 @@ describe('the find block', function() {
         routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-process'),
       });
 
-      request(global.app)
-        .get(`/apples/${fixture.data.chats[0]._id}`)
-        .expect(200)
-        .expect(function(res) {
-          expect(_.omit(res.body.data, 'id')).to.deep.equal({
-            type: 'apples',
-            attributes: {
-              name: 'person1 processed once',
-              count: 1,
-            },
-          });
-        })
-        .end(global.jsonAPIVerify(done));
+      Chat.create({
+        name: 'should processs single objects',
+        count: 88127,
+      }).then((chat) => {
+        request(global.app)
+          .get(`/apples/${chat._id}`)
+          .expect(200)
+          .expect(function(res) {
+            expect(_.omit(res.body.data, 'id')).to.deep.equal({
+              type: 'apples',
+              attributes: {
+                name: 'person1 processed once',
+                count: 88127,
+              },
+            });
+          })
+          .end(global.jsonAPIVerify(done));
+      });
+    });
+  });
+
+  describe('- alternative id -', function() {
+    it('should allow for a "me" route implementation', function(done) {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-alternative-id'),
+      });
+
+      Project.create({
+        title: 'This is my project!!!',
+        description: 'in the find-alternative-id test',
+      }).then((project) => {
+        request(global.app)
+          .get(`/pears/me?createdProject=${project.id}`)
+          .expect(200)
+          .expect(function(res) {
+            expect(res.body.data).to.deep.equal({
+              type: 'pears',
+              attributes: {
+                title: 'This is my project!!!',
+                description: 'in the find-alternative-id test',
+                tags: [],
+              },
+              id: 'me',
+            });
+          })
+          .end(global.jsonAPIVerify(done));
+      });
     });
   });
 });

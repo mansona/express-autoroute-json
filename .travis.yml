@@ -1,6 +1,9 @@
 sudo: false
 language: node_js
 services: mongodb
+branches:
+  only:
+    - "master"
 node_js:
   - 7
   - 6
