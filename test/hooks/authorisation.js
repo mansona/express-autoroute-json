@@ -9,11 +9,11 @@ var fixture = require('../fixtures/loadData');
 
 var Chat = require('../models/chat')();
 
-function successfulDelete(id) {
+function successfulDelete(id, route) {
   return Chat.findOne({
     count: id,
   }).exec().then(function(chat) {
-    return request(global.app).delete('/chats/' + chat._id).expect(204);
+    return request(global.app).delete(`/${route}/${chat._id}`).expect(204);
   }).then(() => {
     // check that it deleted
     return Chat.findOne({
@@ -24,12 +24,12 @@ function successfulDelete(id) {
   });
 }
 
-function successfulUpdate(id) {
+function successfulUpdate(id, route) {
   return Chat.findOne({
     count: id,
   }).exec().then(function(chat) {
     return request(global.app)
-      .patch('/chats/' + chat._id)
+      .patch(`/${route}/${chat._id}`)
       .set('Accept', 'application/json')
       .send({
         data: {
@@ -50,7 +50,24 @@ function successfulUpdate(id) {
   });
 }
 
-describe.only('the authorisation hook', function() {
+function findAllCount(count, done, route) {
+  request(global.app)
+    .get(`/${route}`)
+    .expect(function(res) {
+      expect(_.size(res.body.data)).to.equal(count);
+    })
+    .end(global.jsonAPIVerify(done));
+}
+
+function successfulFindOne(id, route) {
+  return Chat.findOne({
+    count: id,
+  }).exec().then(function(chat) {
+    return request(global.app).get(`/${route}/${chat._id}`).expect(200);
+  });
+}
+
+describe('the authorisation hook', function() {
   beforeEach(function() {
     // reset app
     return fixture.init();
@@ -71,7 +88,7 @@ describe.only('the authorisation hook', function() {
     describe('find', () => {
       it('should return the right number of items based on authorisation', (done) => {
         request(global.app)
-          .get('/chats')
+          .get('/scenarios-authorisation-global-chats')
           .expect(function(res) {
             expect(_.size(res.body.data)).to.equal(6);
           })
@@ -81,14 +98,14 @@ describe.only('the authorisation hook', function() {
         return Chat.findOne({
           count: 6,
         }).exec().then(function(chat) {
-          return request(global.app).get('/chats/' + chat._id).expect(200);
+          return request(global.app).get('/scenarios-authorisation-global-chats/' + chat._id).expect(200);
         });
       });
       it('should fail on access of unauthorised object', () => {
         return Chat.findOne({
           count: 8,
         }).exec().then(function(chat) {
-          return request(global.app).get('/chats/' + chat._id).expect(404);
+          return request(global.app).get('/scenarios-authorisation-global-chats/' + chat._id).expect(404);
         });
       });
     });
@@ -100,14 +117,14 @@ describe.only('the authorisation hook', function() {
 
     describe('delete', () => {
       it('should allow you to delete authorised items', () => {
-        return successfulDelete(6);
+        return successfulDelete(6, 'scenarios-authorisation-global-chats');
       });
 
       it('should fail if you try to delete unauthorised object', () => {
         return Chat.findOne({
           count: 8,
         }).exec().then(function(chat) {
-          return request(global.app).delete('/chats/' + chat._id).expect(404);
+          return request(global.app).delete('/scenarios-authorisation-global-chats/' + chat._id).expect(404);
         }).then(() => {
           // check that it didn't delete
           return Chat.findOne({
@@ -121,7 +138,7 @@ describe.only('the authorisation hook', function() {
 
     describe('update', () => {
       it('should allow you to update authorised items', () => {
-        return successfulUpdate(6);
+        return successfulUpdate(6, 'scenarios-authorisation-global-chats');
       });
 
       it('should fail if you try to update unauthorised object', () => {
@@ -129,7 +146,7 @@ describe.only('the authorisation hook', function() {
           count: 8,
         }).exec().then(function(chat) {
           return request(global.app)
-            .patch('/chats/' + chat._id)
+            .patch('/scenarios-authorisation-global-chats/' + chat._id)
             .set('Accept', 'application/json')
             .send({
               data: {
@@ -163,19 +180,10 @@ describe.only('the authorisation hook', function() {
 
     describe('find', () => {
       it('should return the right number of items based on authorisation', (done) => {
-        request(global.app)
-          .get('/chats')
-          .expect(function(res) {
-            expect(_.size(res.body.data)).to.equal(6);
-          })
-          .end(global.jsonAPIVerify(done));
+        findAllCount(6, done, 'scenarios-authorisation-find-chats');
       });
       it('should allow for direct access of authorised object', () => {
-        return Chat.findOne({
-          count: 6,
-        }).exec().then(function(chat) {
-          return request(global.app).get('/chats/' + chat._id).expect(200);
-        });
+        return successfulFindOne(6, 'scenarios-authorisation-find-chats');
       });
       it('should fail on access of unauthorised object', () => {
         return Chat.findOne({
@@ -189,18 +197,18 @@ describe.only('the authorisation hook', function() {
         // describe('create'); // TODO ???
         describe('delete', () => {
           it('should allow you to delete clearly authorised chat', () => {
-            return successfulDelete(6);
+            return successfulDelete(6, 'scenarios-authorisation-find-chats');
           });
           it('should allow you to delete chat that does not pass the other block authorisation', () => {
-            return successfulDelete(8);
+            return successfulDelete(8, 'scenarios-authorisation-find-chats');
           });
         });
         describe('update', () => {
           it('should allow you to update clearly authorised chat', () => {
-            return successfulUpdate(6);
+            return successfulUpdate(6, 'scenarios-authorisation-find-chats');
           });
           it('should allow you to update chat that does not pass the other block authorisation', () => {
-            return successfulUpdate(8);
+            return successfulUpdate(8, 'scenarios-authorisation-find-chats');
           });
         });
       });
@@ -212,8 +220,32 @@ describe.only('the authorisation hook', function() {
     });
 
     describe('delete', () => {
-      it('should allow you to delete authorised items');
-      it('should fail if you try to delete unauthorised object');
+      beforeEach(() => {
+        global.app.use(bodyParser.json());
+        autoroute(global.app, {
+          throwErrors: true,
+          routesDir: path.join(process.cwd(), 'test', 'fixtures', 'scenarios', 'authorisation', 'delete'),
+        });
+      });
+
+      it('should allow you to delete authorised items', () => {
+        return successfulDelete(6, 'scenarios-authorisation-delete-chats');
+      });
+
+      it('should fail if you try to delete unauthorised object', () => {
+        return Chat.findOne({
+          count: 8,
+        }).exec().then(function(chat) {
+          return request(global.app).delete('/scenarios-authorisation-delete-chat/' + chat._id).expect(404);
+        }).then(() => {
+          // check that it didn't delete
+          return Chat.findOne({
+            count: 8,
+          }).then((chat) => {
+            expect(chat).to.be.ok;
+          });
+        });
+      });
     });
 
     describe('update', () => {
