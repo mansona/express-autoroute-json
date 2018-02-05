@@ -10,7 +10,7 @@ function init() {
     return Chat.create({
       name: 'person' + i,
       count: i,
-    }).then(chatObject => {
+    }).then((chatObject) => {
       chats.push(chatObject);
     });
   });
