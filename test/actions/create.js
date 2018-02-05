@@ -51,27 +51,27 @@ describe('the create block', function() {
     });
 
     request(global.app)
-    .post('/chats')
-    .type('application/json')
-    .send({
-      data: {
-        type: 'chats',
-        attributes: {
-          name: 'name',
-          count: 0,
+      .post('/chats')
+      .type('application/json')
+      .send({
+        data: {
+          type: 'chats',
+          attributes: {
+            name: 'name',
+            count: 0,
+          },
         },
-      },
-    })
-    .end(function(err, postResponse) {
-      expect(err).to.not.be.ok;
-      request(global.app).get('/chats/' + postResponse.body.data.id)
-        .expect(200)
-        .expect(function(getResponse) {
-          expect(postResponse.body.data.id).to.equal(getResponse.body.data.id);
-          expect(getResponse.body.data).to.have.nested.property('attributes.name', 'name');
-        })
-        .end(global.jsonAPIVerify(done));
-    });
+      })
+      .end(function(err, postResponse) {
+        expect(err).to.not.be.ok;
+        request(global.app).get('/chats/' + postResponse.body.data.id)
+          .expect(200)
+          .expect(function(getResponse) {
+            expect(postResponse.body.data.id).to.equal(getResponse.body.data.id);
+            expect(getResponse.body.data).to.have.nested.property('attributes.name', 'name');
+          })
+          .end(global.jsonAPIVerify(done));
+      });
   });
 
   it('should read dasherized attributes on the request body', function(done) {
@@ -114,7 +114,7 @@ describe('the create block', function() {
           expect(project).to.have.property('tags');
           expect(project).to.have.property('isActive', false);
         })
-        .then(done, done);
+          .then(done, done);
       });
   });
 });
