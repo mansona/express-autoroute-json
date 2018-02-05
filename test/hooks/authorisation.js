@@ -263,8 +263,64 @@ describe('the authorisation hook', function() {
     });
 
     describe('update', () => {
-      it('should allow you to update authorised items');
-      it('should fail if you try to update unauthorised object');
+      beforeEach(() => {
+        global.app.use(bodyParser.json());
+        autoroute(global.app, {
+          throwErrors: true,
+          routesDir: path.join(process.cwd(), 'test', 'fixtures', 'scenarios', 'authorisation', 'update'),
+        });
+      });
+      it('should allow you to update authorised items', () => {
+        return successfulUpdate(6, 'scenarios-authorisation-update-chats');
+      });
+      it('should fail if you try to update unauthorised object', () => {
+        return Chat.findOne({
+          count: 8,
+        }).exec().then(function(chat) {
+          return request(global.app)
+            .patch('/scenarios-authorisation-update-chats/' + chat._id)
+            .set('Accept', 'application/json')
+            .send({
+              data: {
+                attributes: {
+                  name: 'super awesome new name',
+                },
+                type: 'chats',
+              },
+            })
+            .expect(404);
+        }).then(() => {
+          // check that it deleted
+          return Chat.findOne({
+            count: 8,
+          }).then((chat) => {
+            expect(chat).to.have.property('name', 'person8');
+          });
+        });
+      });
+
+      describe('should not affect other routes', () => {
+        describe('find', () => {
+          it('should allow you to see all resources', (done) => {
+            findAllCount(10, done, 'scenarios-authorisation-update-chats');
+          });
+          it('should allow you to retrieve clearly authorised chat', () => {
+            return successfulFindOne(6, 'scenarios-authorisation-update-chats');
+          });
+          it('should allow you to retrieve chat that does not pass the other block authorisation', () => {
+            return successfulFindOne(8, 'scenarios-authorisation-update-chats');
+          });
+        });
+        // describe('create'); // TODO ???
+        describe('delete', () => {
+          it('should allow you to delete clearly authorised chat', () => {
+            return successfulDelete(6, 'scenarios-authorisation-update-chats');
+          });
+          it('should allow you to delete chat that does not pass the other block authorisation', () => {
+            return successfulDelete(8, 'scenarios-authorisation-update-chats');
+          });
+        });
+      });
     });
   });
 
