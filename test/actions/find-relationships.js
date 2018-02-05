@@ -40,7 +40,7 @@ describe('the find block with relationships', function() {
           .expect(function(res) {
             expect(res.body.data).to.have.property('relationships');
             expect(res.body.data.relationships)
-              .to.have.deep.property('spouse.data.id', personTwo.id);
+              .to.have.nested.property('spouse.data.id', personTwo.id);
           })
           .end(global.jsonAPIVerify(done));
       });
@@ -61,7 +61,7 @@ describe('the find block with relationships', function() {
           .expect(function(res) {
             expect(res.body.data).to.have.property('relationships');
             expect(res.body.data.relationships)
-              .to.have.deep.property('address.data.id', addressId.toString());
+              .to.have.nested.property('address.data.id', addressId.toString());
           })
           .end(global.jsonAPIVerify(done));
       });
@@ -87,9 +87,9 @@ describe('the find block with relationships', function() {
           .expect(function(res) {
             expect(res.body.data).to.have.property('relationships');
             expect(res.body.data.relationships)
-              .to.have.deep.property('pets');
+              .to.have.nested.property('pets');
             expect(res.body.data.relationships)
-              .to.have.deep.property('pets.data[0].id', pets[0].toString());
+              .to.have.nested.property('pets.data[0].id', pets[0].toString());
           })
           .end(global.jsonAPIVerify(done));
       });

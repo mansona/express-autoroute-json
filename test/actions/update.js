@@ -183,7 +183,7 @@ describe('the update block', function() {
         })
         .expect(200)
         .expect(function(res) {
-          expect(res.body).to.have.deep.property('data.attributes.count', originalChat.count + 10);
+          expect(res.body).to.have.nested.property('data.attributes.count', originalChat.count + 10);
         })
         .end(global.jsonAPIVerify(done));
     });

@@ -41,3 +41,7 @@ beforeEach(function() {
 afterEach(function(done) {
   httpServer.close(done);
 });
+
+after(function() {
+  mongoose.disconnect();
+})

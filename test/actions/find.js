@@ -216,7 +216,7 @@ describe('the find block', function() {
       },
     };
 
-    authorisationFunction(options)(req, {}, function() {});
+    authorisationFunction(options, 'find')(req, {}, function() {});
 
     queryFunction(options)(req, {}, function() {});
 
