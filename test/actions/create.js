@@ -38,8 +38,8 @@ describe('the create block', function() {
       })
       .expect(201)
       .expect(function(res) {
-        expect(res.body).to.have.deep.property('data.id');
-        expect(res.body).to.have.deep.property('data.attributes.name', 'name');
+        expect(res.body).to.have.nested.property('data.id');
+        expect(res.body).to.have.nested.property('data.attributes.name', 'name');
       })
       .end(global.jsonAPIVerify(done));
   });
@@ -68,7 +68,7 @@ describe('the create block', function() {
         .expect(200)
         .expect(function(getResponse) {
           expect(postResponse.body.data.id).to.equal(getResponse.body.data.id);
-          expect(getResponse.body.data).to.have.deep.property('attributes.name', 'name');
+          expect(getResponse.body.data).to.have.nested.property('attributes.name', 'name');
         })
         .end(global.jsonAPIVerify(done));
     });

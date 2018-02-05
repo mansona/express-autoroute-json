@@ -1,6 +1,6 @@
 var autoroute = require('express-autoroute');
 var bodyParser = require('body-parser');
-var expect = require('chai').expect;
+var { expect } = require('chai');
 var mongoose = require('mongoose');
 var path = require('path');
 var request = require('supertest');
@@ -48,10 +48,10 @@ describe('the create block with relationships', function() {
       })
       .expect(201)
       .expect(function(res) {
-        expect(res.body).to.have.deep.property('data.id');
-        expect(res.body).to.have.deep.property('data.attributes.name', 'namey mc nameface');
+        expect(res.body).to.have.nested.property('data.id');
+        expect(res.body).to.have.nested.property('data.attributes.name', 'namey mc nameface');
         expect(res.body)
-          .to.have.deep.property('data.relationships.spouse.data.id', spouseId.toString());
+          .to.have.nested.property('data.relationships.spouse.data.id', spouseId.toString());
       })
       .end(global.jsonAPIVerify(done));
   });
@@ -80,7 +80,7 @@ describe('the create block with relationships', function() {
       .expect(201)
       .expect(function(res) {
         expect(res.body)
-          .to.have.deep.property('data.relationships.in-law.data.id', inlawId.toString());
+          .to.have.nested.property('data.relationships.in-law.data.id', inlawId.toString());
       })
       .end(function(err, res) {
         expect(err).to.not.be.ok;
@@ -88,11 +88,11 @@ describe('the create block with relationships', function() {
         Person.findOne({
           _id: res.body.data.id,
         })
-        .then(function(person) {
-          expect(person).to.have.property('inLaw');
-          global.jsonAPIVerify(done)(err, res);
-        })
-        .then(null, done);
+          .then(function(person) {
+            expect(person).to.have.property('inLaw');
+            global.jsonAPIVerify(done)(err, res);
+          })
+          .then(null, done);
       });
   });
 
@@ -110,10 +110,10 @@ describe('the create block with relationships', function() {
       })
       .expect(201)
       .expect(function(res) {
-        expect(res.body).to.have.deep.property('data.id');
-        expect(res.body).to.have.deep.property('data.attributes.name', 'namey mc nameface');
+        expect(res.body).to.have.nested.property('data.id');
+        expect(res.body).to.have.nested.property('data.attributes.name', 'namey mc nameface');
         expect(res.body)
-          .to.have.deep.property('data.relationships.spouse.data', null);
+          .to.have.nested.property('data.relationships.spouse.data', null);
       })
       .end(global.jsonAPIVerify(done));
   });
@@ -139,10 +139,10 @@ describe('the create block with relationships', function() {
       })
       .expect(201)
       .expect(function(res) {
-        expect(res.body).to.have.deep.property('data.id');
-        expect(res.body).to.have.deep.property('data.attributes.name', 'namey mc nameface');
+        expect(res.body).to.have.nested.property('data.id');
+        expect(res.body).to.have.nested.property('data.attributes.name', 'namey mc nameface');
         expect(res.body)
-          .to.have.deep.property('data.relationships.spouse.data', null);
+          .to.have.nested.property('data.relationships.spouse.data', null);
         expect(res.body)
           .to.not.have.deep.property('data.relationships.monkeyface');
       })
