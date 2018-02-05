@@ -87,19 +87,10 @@ describe('the authorisation hook', function() {
     });
     describe('find', () => {
       it('should return the right number of items based on authorisation', (done) => {
-        request(global.app)
-          .get('/scenarios-authorisation-global-chats')
-          .expect(function(res) {
-            expect(_.size(res.body.data)).to.equal(6);
-          })
-          .end(global.jsonAPIVerify(done));
+        findAllCount(6, done, 'scenarios-authorisation-global-chats');
       });
       it('should allow for direct access of authorised object', () => {
-        return Chat.findOne({
-          count: 6,
-        }).exec().then(function(chat) {
-          return request(global.app).get('/scenarios-authorisation-global-chats/' + chat._id).expect(200);
-        });
+        return successfulFindOne(6, 'scenarios-authorisation-global-chats');
       });
       it('should fail on access of unauthorised object', () => {
         return Chat.findOne({
@@ -243,6 +234,29 @@ describe('the authorisation hook', function() {
             count: 8,
           }).then((chat) => {
             expect(chat).to.be.ok;
+          });
+        });
+      });
+
+      describe('should not affect other routes', () => {
+        describe('find', () => {
+          it('should allow you to see all resources', (done) => {
+            findAllCount(10, done, 'scenarios-authorisation-delete-chats');
+          });
+          it('should allow you to retrieve clearly authorised chat', () => {
+            return successfulFindOne(6, 'scenarios-authorisation-delete-chats');
+          });
+          it('should allow you to retrieve chat that does not pass the other block authorisation', () => {
+            return successfulFindOne(8, 'scenarios-authorisation-delete-chats');
+          });
+        });
+        // describe('create'); // TODO ???
+        describe('update', () => {
+          it('should allow you to update clearly authorised chat', () => {
+            return successfulUpdate(6, 'scenarios-authorisation-find-chats');
+          });
+          it('should allow you to update chat that does not pass the other block authorisation', () => {
+            return successfulUpdate(8, 'scenarios-authorisation-find-chats');
           });
         });
       });
