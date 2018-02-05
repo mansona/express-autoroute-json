@@ -157,7 +157,7 @@ describe.only('the authorisation hook', function() {
       global.app.use(bodyParser.json());
       autoroute(global.app, {
         throwErrors: true,
-        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'scenarios', 'authorisation', 'global'),
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'scenarios', 'authorisation', 'find'),
       });
     });
 
