@@ -196,8 +196,12 @@ describe.only('the authorisation hook', function() {
           });
         });
         describe('update', () => {
-          it('should allow you to update clearly authorised chat');
-          it('should allow you to update chat that does not pass the other block authorisation');
+          it('should allow you to update clearly authorised chat', () => {
+            return successfulUpdate(6);
+          });
+          it('should allow you to update chat that does not pass the other block authorisation', () => {
+            return successfulUpdate(8);
+          });
         });
       });
     });
@@ -207,11 +211,12 @@ describe.only('the authorisation hook', function() {
       it('should fail if you try to create an object you would be unauthorised to create'); // TODO: ??????
     });
 
-    it('should limit delete', () => {
+    describe('delete', () => {
       it('should allow you to delete authorised items');
       it('should fail if you try to delete unauthorised object');
     });
-    it('should limit update', () => {
+
+    describe('update', () => {
       it('should allow you to update authorised items');
       it('should fail if you try to update unauthorised object');
     });
