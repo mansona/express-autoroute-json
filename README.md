@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.org/stonecircle/express-autoroute-json.svg?branch=master)](https://travis-ci.org/stonecircle/express-autoroute-json)
-[![devDependency Status](https://david-dm.org/stonecircle/express-autoroute-json/dev-status.svg?theme=shields.io)](https://david-dm.org/stonecircle/express-autoroute-json#info=devDependencies)
-[![Code Climate](https://codeclimate.com/github/stonecircle/express-autoroute-json/badges/gpa.svg)](https://codeclimate.com/github/stonecircle/express-autoroute-json)
-[![Test Coverage](https://codeclimate.com/github/stonecircle/express-autoroute-json/badges/coverage.svg)](https://codeclimate.com/github/stonecircle/express-autoroute-json/coverage)
+[![dependencies Status](https://david-dm.org/stonecircle/express-autoroute-json/status.svg)](https://david-dm.org/stonecircle/express-autoroute-json)
+[![devDependencies Status](https://david-dm.org/stonecircle/express-autoroute-json/dev-status.svg)](https://david-dm.org/stonecircle/express-autoroute-json?type=dev)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/maintainability)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/test_coverage)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/test_coverage)
 
 # Documentation Pending
 We have just completed the rewrite and express-autoroute-json now speaks [JSON:API](https://jsonapi.org)
