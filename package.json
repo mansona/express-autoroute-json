@@ -44,10 +44,10 @@
     "winston": "^2.2.0"
   },
   "dependencies": {
-    "camelcase-keys": "^3.0.0",
+    "camelcase-keys": "^4.2.0",
     "jsonapi-serializer": "^3.3.0",
     "lodash": "^4.14.2",
-    "pluralize": "^3.0.0",
+    "pluralize": "^7.0.0",
     "q": "^1.0.1"
   }
 }
