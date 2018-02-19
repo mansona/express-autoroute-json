@@ -56,6 +56,47 @@ describe('the create block with relationships', function() {
       .end(global.jsonAPIVerify(done));
   });
 
+  it('should add array relationships to the object if its on the request body', function(done) {
+    var dogId = new mongoose.Types.ObjectId();
+    var catId = new mongoose.Types.ObjectId();
+    request(global.app)
+      .post('/people')
+      .type('application/json')
+      .send({
+        data: {
+          attributes: {
+            name: 'namey mc nameface',
+            age: 29,
+          },
+          relationships: {
+            pets: {
+              data: [{
+                type: 'pets',
+                id: dogId,
+              }, {
+                type: 'pets',
+                id: catId,
+              }],
+            },
+          },
+        },
+      })
+      .expect(201)
+      .expect(function(res) {
+        expect(res.body).to.have.nested.property('data.id');
+        expect(res.body).to.have.nested.property('data.attributes.name', 'namey mc nameface');
+        expect(res.body.data.relationships.pets.data).to.deep.include({
+          type: 'pets',
+          id: dogId.toString(),
+        });
+        expect(res.body.data.relationships.pets.data).to.deep.include({
+          type: 'pets',
+          id: catId.toString(),
+        });
+      })
+      .end(global.jsonAPIVerify(done));
+  });
+
   it('should camelCase relationship keys if they are dasherized', function(done) {
     var inlawId = new mongoose.Types.ObjectId();
     request(global.app)
