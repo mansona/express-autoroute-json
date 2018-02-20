@@ -8,20 +8,28 @@ var httpServer;
 
 Q.longStackSupport = true;
 
+global.validateJSONAPI = function(res) {
+  var validator = new Validator();
+
+  // eslint-disable-next-line global-require
+  var result = validator.validate(res.body, require('./schema.json'));
+
+  if (!result.valid) {
+    throw new Error(result.errors);
+  }
+};
+
 global.jsonAPIVerify = function(done) {
   return function(err, res) {
     if (err) throw err;
 
-    var validator = new Validator();
-
-    // eslint-disable-next-line global-require
-    var result = validator.validate(res.body, require('./schema.json'));
-
-    if (!result.valid) {
-      done(result.errors);
-    } else {
-      done();
+    try {
+      global.validateJSONAPI(res);
+    } catch (e) {
+      return done(e);
     }
+
+    return done();
   };
 };
 

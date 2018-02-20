@@ -222,4 +222,38 @@ describe('the update block', function() {
         });
     }).then(null, done);
   });
+
+  describe('- alternative id -', function() {
+    it('should allow for a "me" route implementation', function() {
+      autoroute(global.app, {
+        throwErrors: true,
+        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'update-alternative-id'),
+      });
+
+      return Project.create({
+        title: 'This is my project!!!',
+        description: 'in the update-alternative-id test',
+      }).then((project) => {
+        return request(global.app)
+          .patch(`/pears/me?createdProject=${project.id}`)
+          // .type('application/json')
+          .send({
+            data: {
+              attributes: {
+                title: 'more respectful title',
+              },
+            },
+          })
+          .then((response) => {
+            global.validateJSONAPI(response);
+
+            expect(response.body.data.id).to.equal('me');
+
+            return Project.findById(project.id).then((updatedProject) => {
+              expect(updatedProject).to.have.property('title', 'more respectful title');
+            });
+          });
+      });
+    });
+  });
 });
