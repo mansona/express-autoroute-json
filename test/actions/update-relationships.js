@@ -1,8 +1,9 @@
 var autoroute = require('express-autoroute');
 var bodyParser = require('body-parser');
-var expect = require('chai').expect;
+var { expect } = require('chai');
 var path = require('path');
 var request = require('supertest');
+const mongoose = require('mongoose');
 
 var fixture = require('../fixtures/update-relationships/loadData');
 
@@ -124,6 +125,43 @@ describe('the update block with relationships', function() {
               })
               .then(done, done);
             });
+        });
+    });
+  });
+
+  it('should be able to add an array relationship with patch', function() {
+    var dogId = new mongoose.Types.ObjectId();
+    var catId = new mongoose.Types.ObjectId();
+
+    return Person.find().then(function(people) {
+      var personOne = people[0];
+
+      // get some pets
+      return request(global.app)
+        .patch('/people/' + personOne.id)
+        .type('application/json')
+        .send({
+          data: {
+            relationships: {
+              pets: {
+                data: [{
+                  type: 'pets',
+                  id: dogId,
+                }, {
+                  type: 'pets',
+                  id: catId,
+                }],
+              },
+            },
+          },
+        })
+        .expect(200)
+        .then(() => {
+          return Person.findOne({
+            _id: personOne.id,
+          }).then(function(updatedPersonOne) {
+            expect(updatedPersonOne.pets).to.have.length(2);
+          });
         });
     });
   });
