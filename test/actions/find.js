@@ -361,34 +361,4 @@ describe('the find block', function() {
       });
     });
   });
-
-  describe('- alternative id -', function() {
-    it('should allow for a "me" route implementation', function(done) {
-      autoroute(global.app, {
-        throwErrors: true,
-        routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-alternative-id'),
-      });
-
-      Project.create({
-        title: 'This is my project!!!',
-        description: 'in the find-alternative-id test',
-      }).then((project) => {
-        request(global.app)
-          .get(`/pears/me?createdProject=${project.id}`)
-          .expect(200)
-          .expect(function(res) {
-            expect(res.body.data).to.deep.equal({
-              type: 'pears',
-              attributes: {
-                title: 'This is my project!!!',
-                description: 'in the find-alternative-id test',
-                tags: [],
-              },
-              id: 'me',
-            });
-          })
-          .end(global.jsonAPIVerify(done));
-      });
-    });
-  });
 });
