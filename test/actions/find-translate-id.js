@@ -16,31 +16,32 @@ describe('the find block with translateId', function() {
     return fixture.reset();
   });
 
-  it('should allow for a "me" route implementation', async () => {
+  it('should allow for a "me" route implementation', () => {
     autoroute(global.app, {
       throwErrors: true,
       routesDir: path.join(process.cwd(), 'test', 'fixtures', 'find-alternative-id'),
     });
 
-    const project = await Project.create({
+    return Project.create({
       title: 'This is my project!!!',
       description: 'in the find-alternative-id test',
-    });
-
-    const response = await request(global.app)
-      .get(`/pears/me?createdProject=${project.id}`)
-      .expect(200);
-
-    global.validateJSONAPI(response);
-    expect(response.body.data).to.deep.equal({
-      type: 'pears',
-      attributes: {
-        title: 'This is my project!!!',
-        description: 'in the find-alternative-id test',
-        tags: [],
-        'original-id': project.id,
-      },
-      id: 'me',
+    }).then((project) => {
+      return request(global.app)
+        .get(`/pears/me?createdProject=${project.id}`)
+        .expect(200)
+        .then((response) => {
+          global.validateJSONAPI(response);
+          expect(response.body.data).to.deep.equal({
+            type: 'pears',
+            attributes: {
+              title: 'This is my project!!!',
+              description: 'in the find-alternative-id test',
+              tags: [],
+              'original-id': project.id,
+            },
+            id: 'me',
+          });
+        });
     });
   });
 });
