@@ -52,4 +52,4 @@ afterEach(function(done) {
 
 after(function() {
   mongoose.disconnect();
-})
+});

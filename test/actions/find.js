@@ -54,7 +54,7 @@ describe('the find block', function() {
     request(global.app).get('/chats').expect(200).expect(function(res) {
       expect(_.size(res.body.data)).to.equal(10);
     })
-    .end(global.jsonAPIVerify(done));
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should return only return models that fit the query', function(done) {
@@ -66,7 +66,7 @@ describe('the find block', function() {
     request(global.app).get('/chats?min=3').expect(200).expect(function(res) {
       expect(_.size(res.body.data)).to.equal(7);
     })
-    .end(global.jsonAPIVerify(done));
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should return a sorted array of objects', function(done) {
@@ -81,7 +81,7 @@ describe('the find block', function() {
       });
       expect(res.body.data).to.deep.equal(expected);
     })
-    .end(global.jsonAPIVerify(done));
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should return a reverse sorted array of objects', function(done) {
@@ -97,7 +97,7 @@ describe('the find block', function() {
 
       expect(res.body.data).to.deep.equal(expected);
     })
-    .end(global.jsonAPIVerify(done));
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should allow authenticated users to get objects', function(done) {
@@ -109,7 +109,7 @@ describe('the find block', function() {
     request(global.app).get('/chats?userlevel=max').expect(200).expect(function(res) {
       expect(_.size(res.body.data)).to.equal(10);
     })
-    .end(global.jsonAPIVerify(done));
+      .end(global.jsonAPIVerify(done));
   });
 
   it('should not allow authenticated users to get objects', function(done) {
@@ -288,7 +288,7 @@ describe('the find block', function() {
         .get('/chats')
         .expect(200)
         .expect(function(res) {
-          res.body.data.forEach(item => {
+          res.body.data.forEach((item) => {
             expect(item.relationships).to.have.property('face');
             expect(item.relationships.face).to.deep.equal({ data: { type: 'mySuperType', id: item.id } });
           });

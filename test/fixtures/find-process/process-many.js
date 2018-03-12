@@ -5,7 +5,7 @@ module.exports.autoroute = autorouteJson({
   model: Chats,
   find: {
     process(results) {
-      results.forEach(result => {
+      results.forEach((result) => {
         // eslint-disable-next-line no-param-reassign
         result.name += ' processed';
       });

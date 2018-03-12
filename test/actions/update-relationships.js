@@ -58,10 +58,10 @@ describe('the update block with relationships', function() {
             }).then(function(updatedPersonOne) {
               expect(updatedPersonOne.spouse).to.equal(null);
             })
-            .then(done, done);
+              .then(done, done);
           });
       })
-      .then(null, done);
+        .then(null, done);
     });
   });
 
@@ -120,10 +120,10 @@ describe('the update block with relationships', function() {
                   _id: personTwo.id,
                 });
               })
-              .then(function(updatedPersonTwo) {
-                expect(updatedPersonTwo.spouse.toString()).equal(personOne.id.toString());
-              })
-              .then(done, done);
+                .then(function(updatedPersonTwo) {
+                  expect(updatedPersonTwo.spouse.toString()).equal(personOne.id.toString());
+                })
+                .then(done, done);
             });
         });
     });

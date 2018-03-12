@@ -12,7 +12,14 @@
     "prefer-arrow-callback": 0,
     "prefer-template": 0,
     "space-before-function-paren": 0,
-    "vars-on-top": 0
+    "vars-on-top": 0,
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always",
+      "exports": "always",
+      "functions": "never"
+    }]
   },
   "overrides": [{
     "files": ["test/**/*.js"],
