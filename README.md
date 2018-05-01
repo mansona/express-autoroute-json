@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/stonecircle/express-autoroute-json.svg?branch=master)](https://travis-ci.org/stonecircle/express-autoroute-json)
 [![dependencies Status](https://david-dm.org/stonecircle/express-autoroute-json/status.svg)](https://david-dm.org/stonecircle/express-autoroute-json)
 [![devDependencies Status](https://david-dm.org/stonecircle/express-autoroute-json/dev-status.svg)](https://david-dm.org/stonecircle/express-autoroute-json?type=dev)
-[![Maintainability](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/maintainability)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/test_coverage)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/3f269374a4293505f284/maintainability)](https://codeclimate.com/github/stonecircle/express-autoroute-json/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/3f269374a4293505f284/test_coverage)](https://codeclimate.com/github/stonecircle/express-autoroute-json/test_coverage)
 
 # Express-Autoroute-JSON - automatically define your JSON:API backend
 
@@ -138,6 +138,12 @@ module.exports.autoroute = autorouteJson({
   },
 });
 ```
+
+## Further Documentation
+
+We are in the process of developing some more in-depth documentation (including courses) as part of the [Authmaker](https://authmaker.com) Curriculum. As I said above you **do not** need to use Authmaker if you want to to use express-autoroute-json, however the current [Authmaker documentation](https://beginner-guides.authmaker.com/current/index) is the most complete documentation of using this entire system in a full-stack application.
+
+There is a tiny bit more documentation on the [wiki](https://github.com/stonecircle/express-autoroute-json/wiki) but if you have any questions or want to request some specific documentation you can reach out to me [on Twitter](https://twitter.com/real_ate)
 
 # Licence
 Copyright (c) 2018, Stone Circle <info@stonecircle.ie>
