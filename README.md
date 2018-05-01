@@ -4,22 +4,88 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/maintainability)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/6a18031f88d7a4a2dd8f/test_coverage)](https://codeclimate.com/repos/57a89b665a0b980c9200543d/test_coverage)
 
-# Documentation Pending
-We have just completed the rewrite and express-autoroute-json now speaks [JSON:API](https://jsonapi.org)
+# Express-Autoroute-JSON - automatically define your JSON:API backend
 
-We will be working on documentation over the coming weeks
+express-autoroute-json is a handy tool which allows you to declarativly define endpoints for [ExpressJS](https://expressjs.com/) that speak [JSON:API](https://jsonapi.org) natively. It is designed to make use of [_Convention Over Configuration_](https://en.wikipedia.org/wiki/Convention_over_configuration) and your endpoints should have Zero boilerplate code, and only contain the definition of your business logic.
 
+## Quick-start
+
+We have a handy [Yeaman](http://yeoman.io/) generator that will spin up a fully functioning backend for you in an instant. To get started, install yeoman globally and install the [@authmaker/generator-express](https://github.com/authmaker/generator-express) generator globally. Don't worry if you're not using [Authmaker](https://authmaker.com/), you can still use this generator to quickly spin up your app.
+
+```sh
+npm install -g yo
+npm install -g @authmaker/generator-express
 ```
-npm install express-autoroute-json@prerelease
+
+the generator **does not** generate a folder for you so create one and run the generator in that folder:
+
+```sh
+mkdir my-app-backend
+cd my-app-backend
+yo @authmaker/express
 ```
 
-and use this in your route file just like before:
+the generator will ask you a series of questions to get started, and it will also ask you for a [MongoDB connection string](https://docs.mongodb.com/manual/reference/connection-string/) and setup that database connection for you.
 
+## Route definitions
+If you have run the above quick-start steps you will have a file `server/routes/v1/example.js` that looks like this:
+
+```javascript
+const autorouteJson = require('express-autoroute-json');
+const { models } = require('../../../models');
+
+module.exports.autoroute = autorouteJson({
+  model: models.example,
+  resource: 'example', // this will be pluralised in the routes
+
+  // default CRUD
+  find: {},
+  create: {},
+  update: {},
+  delete: {},
+});
 ```
-var autorouteJson = require('express-autoroute-json');
 
-//get your mongoose models
-var models = rootRequire('./db/models');
+there are a few things to note about this example. Firstly this is a **fully functioning** example that will create endpoints to create, retrieve, update and delete _'example'_ resources. When you run the server it will show the following output
+
+```sh
+info: creating endpoint: /v1/examples      #find all     - GET
+info: creating endpoint: /v1/examples/:id  #find by id   - GET
+info: creating endpoint: /v1/examples      #create       - POST
+info: creating endpoint: /v1/examples/:id  #update       - PATCH
+info: creating endpoint: /v1/examples/:id  #delete       - DELETE
+```
+
+you will also notice that the endpoints are prefixed with `/v1/`. This is because express-autroute-json is based on [express-autoroute](https://github.com/stonecircle/express-autoroute) which is designed to give you a nicer way to describe your node endpoints and can auto-prefix endpoints with the folder-names they are contained in.
+
+If you want to create a _find-only_ endpoint i.e. you don't want to allow for the creation or deletion of resources then you can just remove the corresponding create, update and delete blocks from the autoroute definition.
+
+
+```javascript
+const autorouteJson = require('express-autoroute-json');
+const { models } = require('../../../models');
+
+module.exports.autoroute = autorouteJson({
+  model: models.example,
+  resource: 'example', // this will be pluralised in the routes
+  find: {},
+});
+```
+
+will result in:
+
+```sh
+info: creating endpoint: /v1/examples      #find all     - GET
+info: creating endpoint: /v1/examples/:id  #find by id   - GET
+```
+
+## Customising the business logic
+
+The simplest example of business logic that you might need for these endpoints is the ability to define authentication. Here is a simple example that restricts all endpoints in this autoroute definition to just be accessible to admins.
+
+```javascript
+const autorouteJson = require('express-autoroute-json');
+const { models } = require('../../../models');
 
 function isAdmin(req, res, next) {
     //deny access if the user is not admin
@@ -30,20 +96,51 @@ function isAdmin(req, res, next) {
 }
 
 module.exports.autoroute = autorouteJson({
-    model: models.account,
-    resource: 'account', //this will be pluralised in the routes
-    authentication: isAdmin, //this is used for all the following functions
+  model: models.example,
+  resource: 'example',
 
-    //default CRUD
-    find: {},
-    create: {},
-    update: {},
-    delete: {}
+  // defining authentication here auto-applies it to all endpoints in this autoroute definition
+  authentication: isAdmin,
+
+  find: {},
+  create: {},
+  update: {},
+  delete: {},
+});
+```
+
+If you wanted to make it so that only admins are allowed to create, update or delete resources but **everyone** is able to retrieve resources then we can define authentication on each action block independently:
+
+```javascript
+const autorouteJson = require('express-autoroute-json');
+const { models } = require('../../../models');
+
+function isAdmin(req, res, next) {
+    if (!req.user || !req.user.isAdmin) {
+        return res.status(401).send("You are not an admin");
+    }
+    next();
+}
+
+module.exports.autoroute = autorouteJson({
+  model: models.example,
+  resource: 'example',
+
+  find: {},
+  create: {
+    authentication: isAdmin,
+  },
+  update: {
+    authentication: isAdmin,
+  },
+  delete: {
+    authentication: isAdmin,
+  },
 });
 ```
 
 # Licence
-Copyright (c) 2016, Stone Circle <info@stonecircle.ie>
+Copyright (c) 2018, Stone Circle <info@stonecircle.ie>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
