@@ -145,6 +145,27 @@ We are in the process of developing some more in-depth documentation (including 
 
 There is a tiny bit more documentation on the [wiki](https://github.com/stonecircle/express-autoroute-json/wiki) but if you have any questions or want to request some specific documentation you can reach out to me [on Twitter](https://twitter.com/real_ate)
 
+# Contributing
+
+## Running tests
+
+Create a MongoDB database with a user for testing purposes.
+
+On the `mongo` terminal:
+```
+use testdb
+db.createUser({
+	user	: 'test',
+	pwd		: 'password',
+	roles	: ['readWrite']
+})
+```
+
+Running the tests:
+```
+env DB_CONNECTION_STRING="mongodb://test:password@127.0.0.1:27017/testdb" npm test
+```
+
 # Licence
 Copyright (c) 2018, Stone Circle <info@stonecircle.ie>
 

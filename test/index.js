@@ -3,8 +3,10 @@ var Q = require('q');
 var express = require('express');
 var http = require('http');
 var Validator = require('jsonschema').Validator;
-
+var dbConnectionString = process.env.DB_CONNECTION_STRING || 'mongodb://localhost/express-autoroute-json-test-database-piNMnJp8'
 var httpServer;
+
+console.log(dbConnectionString)
 
 Q.longStackSupport = true;
 
@@ -35,7 +37,7 @@ global.jsonAPIVerify = function(done) {
 
 before(function() {
   if (!mongoose.connection.readyState) {
-    mongoose.connect('mongodb://localhost/express-autoroute-json-test-database-piNMnJp8');
+    mongoose.connect(dbConnectionString);
   }
 });
 
