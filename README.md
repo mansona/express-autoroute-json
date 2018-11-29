@@ -155,9 +155,9 @@ On the `mongo` terminal:
 ```
 use testdb
 db.createUser({
-	user	: 'test',
-	pwd		: 'password',
-	roles	: ['readWrite']
+    user    : 'test',
+    pwd     : 'password',
+    roles   : ['readWrite']
 })
 ```
 
