@@ -19,7 +19,8 @@
       "imports": "always",
       "exports": "always",
       "functions": "never"
-    }]
+    }],
+    "no-restricted-modules": [1, "q"]
   },
   "overrides": [{
     "files": ["test/**/*.js"],

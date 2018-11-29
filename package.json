@@ -44,6 +44,7 @@
     "winston": "^2.2.0"
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "camelcase-keys": "^4.2.0",
     "jsonapi-serializer": "^3.3.0",
     "lodash": "^4.14.2",
