@@ -10,7 +10,9 @@ module.exports.autoroute = autorouteJson({
         return {
           count: -1,
         };
-      } else if (req.query.sortup) {
+      }
+
+      if (req.query.sortup) {
         return {
           count: 1,
         };

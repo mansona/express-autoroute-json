@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
+var Q = require('q');
 
 var Person = require('../../models/person')();
-var Q = require('q');
 
 function init() {
   var promises = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(function(i) {
@@ -18,7 +18,7 @@ function init() {
 function reset() {
   // only allow this in test
   if (process.env.NODE_ENV === 'test') {
-    var collections = mongoose.connection.collections;
+    var { collections } = mongoose.connection;
 
     var promises = Object.keys(collections).map(function(collection) {
       return Q.ninvoke(collections[collection], 'remove');

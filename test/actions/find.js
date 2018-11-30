@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var autoroute = require('express-autoroute');
-var expect = require('chai').expect;
+var { expect } = require('chai');
 var path = require('path');
 var request = require('supertest');
 
@@ -9,7 +9,6 @@ var fixture = require('../fixtures/loadData');
 var authorisationFunction = require('../../lib/authorisation');
 var queryFunction = require('../../lib/query');
 var Chat = require('../models/chat')();
-var Project = require('../models/project')();
 
 describe('the find block', function() {
   beforeEach(function() {

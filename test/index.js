@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Q = require('q');
 var express = require('express');
 var http = require('http');
-var Validator = require('jsonschema').Validator;
+var { Validator } = require('jsonschema');
 
 var httpServer;
 

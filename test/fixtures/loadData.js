@@ -23,7 +23,7 @@ function reset() {
   if (process.env.NODE_ENV === 'test') {
     chats.length = 0;
 
-    var collections = mongoose.connection.collections;
+    var { collections } = mongoose.connection;
 
     var promises = Object.keys(collections).map(function(collection) {
       return Q.ninvoke(collections[collection], 'remove');
