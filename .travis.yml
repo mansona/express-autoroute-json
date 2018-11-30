@@ -7,8 +7,9 @@ branches:
   only:
     - "master"
 node_js:
-  - 8
   - 6
+  - 8
+  - 10
 
 env:
   global:
@@ -19,6 +20,10 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   - mkdir coverage
+
+script:
+  - npm run lint:js
+  - npm test
 
 after_script:
   - npm run coverage

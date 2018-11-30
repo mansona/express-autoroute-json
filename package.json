@@ -7,9 +7,12 @@
     "node": ">=0.10"
   },
   "scripts": {
-    "test": "NODE_ENV=test nyc -a mocha --recursive",
+    "coverage": "NODE_ENV=test nyc -a report --reporter=text-lcov mocha > coverage/lcov.info",
+    "lint:js": "eslint .",
+    "start-docker": "docker run -d -p 27017:27017 --rm --name express-autoroute-json-mongo mongo",
+    "stop-docker": "docker stop express-autoroute-json-mongo",
     "test-watch": "NODE_ENV=test mocha --recursive -w --reporter min",
-    "coverage": "NODE_ENV=test nyc -a report --reporter=text-lcov mocha > coverage/lcov.info"
+    "test": "NODE_ENV=test nyc -a mocha --recursive"
   },
   "repository": {
     "type": "git",
