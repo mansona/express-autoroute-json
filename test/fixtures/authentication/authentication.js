@@ -6,8 +6,9 @@ module.exports.autoroute = autorouteJson({
   find: {
     authentication: function(req, res, next) {
       // eh.. in case anyone sees this... don't EVER do authentication this way.
-      // This is clearly an oversimplified authentication function for testing purposes. That is all!
-      if (req.query.userlevel == 'max') {
+      // This is clearly an oversimplified authentication function for testing
+      // purposes. That is all!
+      if (req.query.userlevel === 'max') {
         return next();
       }
 
