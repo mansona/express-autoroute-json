@@ -1,6 +1,6 @@
 {
   "name": "express-autoroute-json",
-  "version": "3.6.1",
+  "version": "3.6.2",
   "description": "Express Auto Route Json is an automatic JSON 'REST' api builder for express-autoroute",
   "main": "index.js",
   "engines": {
