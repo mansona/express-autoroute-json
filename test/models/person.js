@@ -18,7 +18,7 @@ var schema = mongoose.Schema({
   },
   pets: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Pet',
+    ref: 'Animal',
   }],
 });
 

@@ -71,10 +71,10 @@ describe('the create block with relationships', function() {
           relationships: {
             pets: {
               data: [{
-                type: 'pets',
+                type: 'animals',
                 id: dogId,
               }, {
-                type: 'pets',
+                type: 'animals',
                 id: catId,
               }],
             },
@@ -86,11 +86,11 @@ describe('the create block with relationships', function() {
         expect(res.body).to.have.nested.property('data.id');
         expect(res.body).to.have.nested.property('data.attributes.name', 'namey mc nameface');
         expect(res.body.data.relationships.pets.data).to.deep.include({
-          type: 'pets',
+          type: 'animals',
           id: dogId.toString(),
         });
         expect(res.body.data.relationships.pets.data).to.deep.include({
-          type: 'pets',
+          type: 'animals',
           id: catId.toString(),
         });
       })
