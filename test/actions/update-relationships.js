@@ -145,10 +145,10 @@ describe('the update block with relationships', function() {
             relationships: {
               pets: {
                 data: [{
-                  type: 'pets',
+                  type: 'animals',
                   id: dogId,
                 }, {
-                  type: 'pets',
+                  type: 'animals',
                   id: catId,
                 }],
               },
