@@ -1,5 +1,5 @@
 
-3.6.1 / 2018-12-06
+3.6.2 / 2018-12-06
 ==================
 
   * Fix one-to-many relationship type bug #33 from @Redsandro
