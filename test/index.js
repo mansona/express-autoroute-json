@@ -3,8 +3,8 @@ var Q = require('q');
 var express = require('express');
 var http = require('http');
 var { Validator } = require('jsonschema');
-var dbConnectionString = process.env.DB_CONNECTION_STRING || 'mongodb://localhost/express-autoroute-json-test-database-piNMnJp8';
 
+var dbConnectionString = process.env.DB_CONNECTION_STRING || 'mongodb://localhost/express-autoroute-json-test-database-piNMnJp8';
 var httpServer;
 
 Q.longStackSupport = true;
