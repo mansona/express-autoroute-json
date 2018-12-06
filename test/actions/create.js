@@ -1,5 +1,5 @@
 var autoroute = require('express-autoroute');
-var expect = require('chai').expect;
+var { expect } = require('chai');
 var bodyParser = require('body-parser');
 
 var path = require('path');

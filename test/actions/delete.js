@@ -1,6 +1,6 @@
 var autoroute = require('express-autoroute');
 var bodyParser = require('body-parser');
-var expect = require('chai').expect;
+var { expect } = require('chai');
 var mongoose = require('mongoose');
 var path = require('path');
 var request = require('supertest');
