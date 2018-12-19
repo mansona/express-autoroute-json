@@ -1,6 +1,6 @@
 {
   "name": "express-autoroute-json",
-  "version": "3.6.2",
+  "version": "3.6.3",
   "description": "Express Auto Route Json is an automatic JSON 'REST' api builder for express-autoroute",
   "main": "index.js",
   "engines": {
@@ -44,13 +44,13 @@
     "mongoose": "^5.3.14",
     "nyc": "^13.1.0",
     "supertest": "^3.3.0",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "q": "^1.0.1"
   },
   "dependencies": {
     "camelcase-keys": "^5.0.0",
     "jsonapi-serializer": "^3.6.4",
     "lodash": "^4.17.11",
-    "pluralize": "^7.0.0",
-    "q": "^1.0.1"
+    "pluralize": "^7.0.0"
   }
 }

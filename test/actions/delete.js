@@ -77,4 +77,62 @@ describe('the delete block', function() {
         });
     }).then(done, done);
   });
+
+  it('should not delete anything if translateId returns nothing', function() {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'delete'),
+    });
+
+    let initialCount;
+
+    return Chat.count().then((count) => {
+      initialCount = count;
+    })
+      .then(() => {
+        return request(global.app)
+          .delete('/conversations/face');
+      })
+      .then((response) => {
+        expect(response.status).to.equal(404);
+        return Chat.count();
+      })
+      .then((count) => {
+        expect(count).to.eql(initialCount);
+      });
+  });
+
+  it('should use translateId to pick the id for deletion', function() {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'delete'),
+    });
+
+    return Chat.findOne().then(function(chat) {
+      return request(global.app)
+        .delete('/conversations/face')
+        .query({ id: chat.id })
+        .then((response) => {
+          expect(response.status).to.equal(204);
+
+          return Chat.findById(chat.id).then(function(secondChat) {
+            expect(secondChat).to.not.be.ok;
+          });
+        });
+    });
+  });
+
+  it('should respond with something if translateId errors', function() {
+    autoroute(global.app, {
+      throwErrors: true,
+      routesDir: path.join(process.cwd(), 'test', 'fixtures', 'delete'),
+    });
+
+    return request(global.app)
+      .delete('/discussions/face')
+      .then((response) => {
+        expect(response.status).to.equal(500);
+        expect(response.body).to.deep.include({ errors: [{ detail: 'I cant let you do that dave' }] });
+      });
+  });
 });
