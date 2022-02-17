@@ -1,0 +1,47 @@
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+
+env:
+  CC_TEST_REPORTER_ID: 10ca3ddfc7f3a60104ec6b7d7da0aa23acaa5caa252c7257c06d19f46b5acb00
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version:
+          - 6
+          - 8
+          - 10
+          - 12
+          - 14
+          - 16
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # setup codeclimate
+      - run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - run: chmod +x ./cc-test-reporter
+      - run: ./cc-test-reporter before-build
+      - run: mkdir coverage
+
+      - uses: supercharge/mongodb-github-action@1.7.0
+
+      - run: npm install
+      - run: npm run lint:js
+      - run: npm test
+
+      - run: npm run coverage
+      - run: ./cc-test-reporter after-build
